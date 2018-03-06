@@ -1,0 +1,47 @@
+<div class="container">
+	<h2 class="text-center">{{story}}</h2>
+	<div class="comments">
+		<h3>Comments</h3>		
+	</div>
+</div>
+
+
+<script>
+
+	window.fbAsyncInit = function() {
+	    FB.init({
+	      appId            : '172494766720528',
+	      autoLogAppEvents : true,
+	      xfbml            : true,
+	      version          : 'v2.12'
+	    });
+
+		FB.api(
+		    "/{{postid}}/comments?access_token={{user.accesstoken}}",
+		    function (response) {
+		      if (response && !response.error) {
+		        response.data.forEach(function(result){
+		        	console.log(result);
+		        	var message = result.message;
+		        	var from = result.from.name;
+		        	var new_comment = '<div class="row"><h3><b>'+message+'</b></h3><p>By '+from+'</p></div>';
+		        	$('.comments').append(new_comment);
+		        })
+		      }
+		      else{
+		      	console.log(response.error)
+		      }
+		    }
+		);
+
+	  };
+
+	(function(d, s, id){
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.id = id;
+		js.src = "https://connect.facebook.net/en_US/sdk.js";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+
+</script>

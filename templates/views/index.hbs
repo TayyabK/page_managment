@@ -1,0 +1,75 @@
+{{!< default}}
+<div class="container">
+	<div class="jumbotron text-center">
+		{{#if user}}
+		<h1>Welcome {{user.name.full}}</h1>
+		{{#if user.accesstoken}}
+			<p>AccessToken Recieved</p>
+		{{/if}}
+		<p>Facebook Page Managment System</p>
+		{{else}}
+		<a href="/auth/facebook">
+		    <i class="fa fa-facebook"></i>
+		    <span>Log In using Facebook</span>
+		</a>
+		{{/if}}
+	</div>
+</div>
+
+<!-- 
+<script type="text/javascript">
+	
+	FB.api(
+	    "/{page-id}",
+	    function (response) {
+	      if (response && !response.error) {
+	        /* handle the result */
+	        console.log(response)
+	      }
+	    }
+	);
+
+</script>
+ -->
+<script>
+
+	window.fbAsyncInit = function() {
+	    FB.init({
+	      appId            : '172494766720528',
+	      autoLogAppEvents : true,
+	      xfbml            : true,
+	      version          : 'v2.12'
+	    });
+
+		FB.api(
+		    "/me/accounts?access_token={{user.accesstoken}}",
+		    function (response) {
+		      if (response && !response.error) {
+		        console.log(response.data[0])
+		        response.data.forEach(function(result){
+		        	var access_token = result.access_token;
+		        	var id = result.id;
+		        	var name = result.name;
+		        	var new_btn = '<div class="col-sm-6"><a href="/page?Id='+id+'&name='+name+'" class="btn btn-success btn-lg">'+name+'</a></div>'
+		        	$('.jumbotron').append(new_btn);
+		        })
+		      }
+		      else{
+		      	console.log(response.error)
+		      }
+		    }
+		);
+
+	  };
+
+	(function(d, s, id){
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.id = id;
+		js.src = "https://connect.facebook.net/en_US/sdk.js";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+
+
+
+</script>

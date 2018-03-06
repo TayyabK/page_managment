@@ -1,0 +1,79 @@
+<div class="container">
+	<h2 class="text-center">{{pagename}} BY {{user.name.full}}</h2>
+	<div class="posts">
+		<textarea id="post_msg"></textarea>
+		<button class="btn btn-success" id="add_post_btn">Add Post</button>
+		<h3>Posts</h3>		
+	</div>
+</div>
+
+
+<script>
+
+	window.fbAsyncInit = function() {
+	    FB.init({
+	      appId            : '172494766720528',
+	      autoLogAppEvents : true,
+	      xfbml            : true,
+	      version          : 'v2.12'
+	    });
+
+		FB.api(
+		    "/{{pageid}}/posts?access_token={{user.accesstoken}}",
+		    function (response) {
+		      if (response && !response.error) {
+		        response.data.forEach(function(result){
+		        	console.log(result);
+		        	var story = result.story;
+		        	var postid = result.id;
+		        	var time = result.created_time;
+		        	var message = result.message;
+		        	if(story !== undefined){
+			        	var new_post = '<div class="row"><a href="/post?Id='+postid+'&story='+story+'"><p><b>'+story+'</b></p></a></div>';
+			        	$('.posts').append(new_post);
+		        	}
+		        	else{
+			        	if(message !== undefined){
+			        		var new_post = '<div class="row"><a href="/post?Id='+postid+'&story='+message+'"><p><b>'+message+'</b></p></a></div>';
+			        		$('.posts').append(new_post);
+			        	}
+		        	}
+		        })
+		      }
+		      else{
+		      	console.log(response.error)
+		      }
+		    }
+		);
+
+		$('#add_post_btn').click(function() {
+			var message = $('#post_msg').val()
+			debugger;
+			FB.api(
+			    "/{{pageid}}/feed",
+			    "POST",
+			    {
+			    	"message": message,
+			    	"access_token": "EAACc4hFLxhABACYVnF1EZAnnygI4jJKdZB5auwLLEOedmMZArxAc2DbsV5Rgl9WfjEK8ZBuKGkVjhFAGVgKkXVh0kTNq7S1kaINpDBch5YMbQ8vUNgHJkZAiGiZAMpFhNTeAyisCiiEWYzSZCeWyV4DwP8UXziQX0ZBCYJMYgpbZAUwZDZD"
+			    },
+			    function (response) {
+			      if (response && !response.error) {
+			        console.log(response)
+			      }
+			      else{
+			      	console.log(response.error)
+			      }
+			    }
+			);
+		});
+	  };
+
+	(function(d, s, id){
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.id = id;
+		js.src = "https://connect.facebook.net/en_US/sdk.js";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+
+</script>
