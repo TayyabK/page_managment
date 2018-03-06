@@ -3,7 +3,7 @@ var middleware = require('./middleware');
 var passport = require('passport');
 var importRoutes = keystone.importer(__dirname);
 var User = keystone.list('User');
-const xhub = require('express-x-hub');
+var xhub = require('express-x-hub');
 var bodyParser = require('body-parser');
 
 
@@ -40,6 +40,7 @@ exports = module.exports = function (app) {
 
 	app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
 	app.use(bodyParser.json());
+	app.use(methodOverride());
 
 	app.get('/', routes.views.index);
 	app.get('/page', routes.views.page);
