@@ -5,7 +5,7 @@ var importRoutes = keystone.importer(__dirname);
 var User = keystone.list('User');
 var xhub = require('express-x-hub');
 var bodyParser = require('body-parser');
-
+var methodOverride = require('method-override');
 
 
 // Common Middleware
