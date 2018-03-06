@@ -3,8 +3,8 @@ var middleware = require('./middleware');
 var passport = require('passport');
 var importRoutes = keystone.importer(__dirname);
 var User = keystone.list('User');
+const xhub = require('express-x-hub');
 var bodyParser = require('body-parser');
-var xhub = require('express-x-hub');
 
 
 
