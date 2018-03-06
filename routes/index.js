@@ -3,6 +3,8 @@ var middleware = require('./middleware');
 var passport = require('passport');
 var importRoutes = keystone.importer(__dirname);
 var User = keystone.list('User');
+var bodyParser = require('body-parser');
+var xhub = require('express-x-hub');
 
 
 
@@ -29,9 +31,16 @@ var routes = {
 	views: importRoutes('./views'),
 };
 
+
+var token = process.env.TOKEN || 'token';
+
 // Setup Route Bindings
 exports = module.exports = function (app) {
 	// Views
+
+	app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
+	app.use(bodyParser.json());
+
 	app.get('/', routes.views.index);
 	app.get('/page', routes.views.page);
 	app.get('/post', routes.views.post);
@@ -50,5 +59,28 @@ exports = module.exports = function (app) {
         })
     );
 
+	app.get('/facebook', function(req, res) {   
+	  if (
+	    req.param('hub.mode') == 'subscribe' &&
+	    req.param('hub.verify_token') == token
+	  ) {
+	    res.send(req.param('hub.challenge'));
+	  } else {
+	    res.sendStatus(400);
+	  }
+	});
 
+	app.post('/facebook', function(req, res) {
+	  console.log('Facebook request body:', req.body);
+
+	  if (!req.isXHubValid()) {
+	    console.log('Warning - request header X-Hub-Signature not present or invalid');
+	    res.sendStatus(401);
+	    return;
+	  }
+
+	  console.log('request header X-Hub-Signature validated');
+	  // Process the Facebook updates here
+	  res.sendStatus(200);
+	});
 };
