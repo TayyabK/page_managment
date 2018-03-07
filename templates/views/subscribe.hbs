@@ -2,6 +2,7 @@
 	<h2 class="text-center">Subscribe</h2>
 	<button class="btn btn-success" id="add_sub">Add Subscirbtion</button>
 	<button class="btn btn-success" id="check_sub">Check Subscirbtion</button>
+	<button class="btn btn-success" id="delete_sub">Delete Subscirbtion</button>
 </div>
 
 
@@ -54,6 +55,25 @@
     		    }
     		);
         });
+
+	      $("#delete_sub").click(function(event) {
+	      	/* Act on the event */
+	  		FB.api(
+	  		    "/"+pageId+"/subscribed_apps",
+	  		    "DELETE",
+	  		    {
+	  		    	"access_token": page_token
+	  		    },
+	  		    function (response) {
+	  		      if (response && !response.error) {
+	  		      	console.log(response)		        
+	  		      }
+	  		      else{
+	  		      	console.log(response.error)
+	  		      }
+	  		    }
+	  		);
+	      });
 	  };
 
 	(function(d, s, id){
