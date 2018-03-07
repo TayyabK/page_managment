@@ -1,0 +1,67 @@
+<div class="container">
+	<h2 class="text-center">Subscribe</h2>
+	<button class="btn btn-success" id="add_sub">Add Subscirbtion</button>
+	<button class="btn btn-success" id="check_sub">Check Subscirbtion</button>
+</div>
+
+
+<script>
+    var pageId = '{{pageId}}';
+    var page_token = '{{pageToken}}';
+
+	window.fbAsyncInit = function() {
+	    FB.init({
+	      appId            : '172494766720528',
+	      autoLogAppEvents : true,
+	      xfbml            : true,
+	      version          : 'v2.12'
+	    });
+
+	    $("#check_sub").click(function(event) {
+	    	/* Act on the event */
+			FB.api(
+			    "/"+pageId+"/subscribed_apps",
+			    "GET",
+			    {
+			    	"access_token": page_token
+			    },
+			    function (response) {
+			      if (response && !response.error) {
+			      	console.log(response)		        
+			      }
+			      else{
+			      	console.log(response.error)
+			      }
+			    }
+			);
+	    });
+
+        $("#add_sub").click(function(event) {
+        	/* Act on the event */
+    		FB.api(
+    		    "/"+pageId+"/subscribed_apps",
+    		    "POST",
+    		    {
+    		    	"access_token": page_token
+    		    },
+    		    function (response) {
+    		      if (response && !response.error) {
+    		      	console.log(response)		        
+    		      }
+    		      else{
+    		      	console.log(response.error)
+    		      }
+    		    }
+    		);
+        });
+	  };
+
+	(function(d, s, id){
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.id = id;
+		js.src = "https://connect.facebook.net/en_US/sdk.js";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+
+</script>

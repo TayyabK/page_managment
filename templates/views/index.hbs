@@ -50,7 +50,7 @@
 		        	var access_token = result.access_token;
 		        	var id = result.id;
 		        	var name = result.name;
-		        	var new_btn = '<div class="col-sm-6"><a href="/page?Id='+id+'&name='+name+'" class="btn btn-success btn-lg">'+name+'</a></div>'
+		        	var new_btn = '<div class="col-sm-6"><a href="/subscribe?Id='+id+'&token='+access_token+'" class="btn btn-success btn-lg">'+name+'</a></div>'
 		        	$('.jumbotron').append(new_btn);
 		        })
 		      }
