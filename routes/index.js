@@ -74,9 +74,10 @@ exports = module.exports = function (app) {
 
 	app.post('/facebook', function(req, res) {
 	  console.log('Facebook request body:', req.body);
-	  console.log("ID:",req.body.entry.id);
-	  console.log("Changes:",req.body.entry.changes);
-	  console.log("Time:",req.body.entry.time);
+	  console.log("ENTRY:",req.body.entry);
+	  console.log("ID:",req.body.entry[0].id);
+	  console.log("Changes:",req.body.entry[0].changes);
+	  console.log("Time:",req.body.entry[0].time);
 /*	  if (!req.isXHubValid()) {
 	    console.log('Warning - request header X-Hub-Signature not present or invalid');
 	    res.sendStatus(401);
