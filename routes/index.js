@@ -62,7 +62,6 @@ exports = module.exports = function (app) {
     );
 
 	app.get('/facebook', function(req, res) {   
-	  console.log(req.query.hub.mode);
 	  if (
 	    req.params('hub.mode') == 'subscribe' &&
 	    req.params('hub.verify_token') == token
@@ -75,7 +74,9 @@ exports = module.exports = function (app) {
 
 	app.post('/facebook', function(req, res) {
 	  console.log('Facebook request body:', req.body);
-
+	  console.log("ID:",req.body.entry.id);
+	  console.log("Changes:",req.body.entry.changes);
+	  console.log("Time:",req.body.entry.time);
 /*	  if (!req.isXHubValid()) {
 	    console.log('Warning - request header X-Hub-Signature not present or invalid');
 	    res.sendStatus(401);
