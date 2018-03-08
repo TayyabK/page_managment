@@ -42,7 +42,10 @@ exports = module.exports = function (app) {
 */	app.use(bodyParser.json());
 /*	app.use(methodOverride());
 */
-	app.get('/', routes.views.index);
+	app.all('/', routes.views.index);
+	app.all('/signup', routes.views.signup);
+	app.get('/signout', routes.views.signout);
+	app.all('/channel', routes.views.channel);
 	app.get('/page', routes.views.page);
 	app.get('/post', routes.views.post);
 	app.get('/subscribe', routes.views.subscribe);

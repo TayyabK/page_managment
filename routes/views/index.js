@@ -14,6 +14,34 @@ exports = module.exports = function (req, res) {
 
 	// Render the view
 
+	view.on('post', { action: 'signin' }, function(next) {
+		
+		if (!req.body.email || !req.body.password) {
+			req.flash('error', {title:'Please enter your username and password.'});
+			return next();
+		}
+		
+		var onSuccess = function() {
+			if (req.body.target && !/join|signin/.test(req.body.target)) {
+				console.log('[signin] - Set target as [' + req.body.target + '].');
+					res.redirect('/welcome/');
+				}
+			else{
+				return res.redirect('/channel');
+			}
+		}
+		
+		var onFail = function() {
+			req.flash('error',{title: 'Your username or password were incorrect, please try again.'});
+			return next();
+		}
+		
+		keystone.session.signin({ email: req.body.email, password: req.body.password }, req, res, onSuccess, onFail);
+		
+	});
+	
+
+
 	var host = req.get('host');
 	if(host == 'localhost:3000'){
 		var callbackUrlHost = "http://localhost:3000";

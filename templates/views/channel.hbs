@@ -1,0 +1,145 @@
+<main id="main">
+	<div class="title">
+		<div class="titles">
+			<h2>Accounts</h2>
+			<p>Manage Accounts for receiving tickets.</p>
+		</div>
+	</div>
+	<div class="content">
+		<div class="tabs vertical platforms flex">
+			<!-- Nav tabs -->
+			<ul class="nav nav-pills nav-stacked">
+				<li role="presentation" class="active">
+					<a href="#facebook-tab" role="tab" data-toggle="tab">
+						<i class="fa fa-facebook-square"></i>
+						<h3>Facebook <span>2 accounts</span></h3>
+					</a>
+				</li>
+				<li role="presentation" class="">
+					<a href="#twitter-tab" role="tab" data-toggle="tab">
+						<i class="fa fa-twitter-square"></i>
+						<h3>Twitter <span>5 accounts</span></h3>
+					</a>
+				</li>
+				<li role="presentation" class="">
+					<a href="#instagram-tab" role="tab" data-toggle="tab">
+						<i class="fa fa-instagram"></i>
+						<h3>Instagram <span>1 account</span></h3>
+					</a>
+				</li>
+				<li role="presentation" class="">
+					<a href="#email-tab" role="tab" data-toggle="tab">
+						<i class="fa fa-envelope"></i>
+						<h3>Email <span>3 accounts</span></h3>
+					</a>
+				</li>
+				<li role="presentation" class="">
+					<a href="#livechat-tab" role="tab" data-toggle="tab">
+						<i class="fa fa-comments-o"></i>
+						<h3>Live Chat <span>4 widgets</span></h3>
+					</a>
+				</li>
+			</ul>
+			<div class="tab-content col-sm">
+				<div role="tabpanel" class="tab-pane fade in active" id="facebook-tab">
+					<div class="title">
+						<div class="titles">
+							<h2>Facebook</h2>
+						</div>
+						<div class="buttons">
+							<a href="/auth/facebook" class="btn btn-success btn-sm">Add account</a>
+							<select class="form-control form-control-sm">
+								<option value="">Any Brand</option>
+								<option value="">Sapphire Pakistan</option>
+								<option value="">Sapphire Retail</option>
+								<option value="">Sapphire International</option>
+							</select>
+						</div>
+					</div>
+					{{#each Accounts}}
+					<h3>Pages from {{name.full}}'s Account</h3>
+					<div class="accounts" id="{{accountId}}">
+						{{#each ../Pages}}
+						{{#ifeq ../accountId accountId}}
+						<div class="account">
+							<p class="account-title">{{pagename}}</p>
+							<div class="account-brand">
+								{{#ifeq status 'unsubscribe'}}
+								<button class="btn btn-success" id="unsubscribe-{{pageId}}">Unsubscribe</button>
+								{{else}}
+								<button class="btn btn-success" id="subscribe-{{pageId}}">Subscribe</button>
+								{{/ifeq}}
+							</div>
+						</div>
+						{{/ifeq}}
+						{{/each}}
+					</div>
+					{{/each}}
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+
+<script>
+
+	window.fbAsyncInit = function() {
+	    FB.init({
+	      appId            : '172494766720528',
+	      autoLogAppEvents : true,
+	      xfbml            : true,
+	      version          : 'v2.12'
+	    });
+
+	    subscribePage(pageId,page_token){
+	    	FB.api(
+	    	    "/"+pageId+"/subscribed_apps",
+	    	    "POST",
+	    	    {
+	    	    	"access_token": page_token
+	    	    },
+	    	    function (response) {
+	    	      if (response && !response.error) {
+	    	      	console.log(response)
+	    	      	$('#subscribe-'+pageId).hide();		        
+	    	      	$('#unsubscribe-'+pageId).show();		        
+	    	      }
+	    	      else{
+	    	      	console.log(response.error)
+	    	      }
+	    	    }
+	    	);
+	    }
+
+	    unsubscribePage(pageId,page_token){
+	    	FB.api(
+	    	    "/"+pageId+"/subscribed_apps",
+	    	    "DELETE",
+	    	    {
+	    	    	"access_token": page_token
+	    	    },
+	    	    function (response) {
+	    	      if (response && !response.error) {
+	    	      	console.log(response)
+	    	      	$('#subscribe-'+pageId).show();
+	    	      	$('#unsubscribe-'+pageId).hide();
+	    	      }
+	    	      else{
+	    	      	console.log(response.error)
+	    	      }
+	    	    }
+	    	);
+	    }
+	  };
+
+	(function(d, s, id){
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.id = id;
+		js.src = "https://connect.facebook.net/en_US/sdk.js";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+
+
+
+</script>
