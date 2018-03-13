@@ -1,10 +1,13 @@
-var keystone = require('keystone');
-var middleware = require('./middleware');
-var passport = require('passport');
-var importRoutes = keystone.importer(__dirname);
-var User = keystone.list('User');
-/*var xhub = require('express-x-hub');
-*/var bodyParser = require('body-parser');
+var keystone = require('keystone'),
+	middleware = require('./middleware'),
+	passport = require('passport'),
+	importRoutes = keystone.importer(__dirname),
+	User = keystone.list('User'),
+	Ticket = keystone.list('Ticket'),
+	bodyParser = require('body-parser');
+
+var xhub = require('express-x-hub');
+
 /*var methodOverride = require('method-override');
 */
 
@@ -39,8 +42,8 @@ var token = process.env.TOKEN || 'token';
 exports = module.exports = function (app) {
 	// Views
 
-/*	app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
-*/	app.use(bodyParser.json());
+	app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
+	app.use(bodyParser.json());
 /*	app.use(methodOverride());
 */
 	app.all('/', routes.views.index);
@@ -89,15 +92,16 @@ exports = module.exports = function (app) {
 	  console.log("Changes:",req.body.entry[0].changes);
 	  console.log("Time:",req.body.entry[0].time);
 	  console.log("FROM:",req.body.entry[0].changes[0].value.from);
-	  console.log("FROM:",req.body.entry[0].changes[0].value.post);
-/*	  if (!req.isXHubValid()) {
+	  console.log("POST:",req.body.entry[0].changes[0].value.post);
+
+	  if (!req.isXHubValid()) {
 	    console.log('Warning - request header X-Hub-Signature not present or invalid');
 	    res.sendStatus(401);
 	    return;
 	  }
 
 	  console.log('request header X-Hub-Signature validated');
-*/	  // Process the Facebook updates here
+	  // Process the Facebook updates here
 	  res.sendStatus(200);
 	});
 };
