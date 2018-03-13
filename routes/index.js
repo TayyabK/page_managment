@@ -7,9 +7,8 @@ var keystone = require('keystone'),
 	bodyParser = require('body-parser');
 
 var xhub = require('express-x-hub');
+var methodOverride = require('method-override');
 
-/*var methodOverride = require('method-override');
-*/
 
 // Common Middleware
 keystone.pre('routes', passport.initialize());
@@ -42,10 +41,6 @@ var token = process.env.TOKEN || 'token';
 exports = module.exports = function (app) {
 	// Views
 
-	app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
-	app.use(bodyParser.json());
-/*	app.use(methodOverride());
-*/
 	app.all('/', routes.views.index);
 	app.all('/signup', routes.views.signup);
 	app.get('/signout', routes.views.signout);
@@ -93,8 +88,11 @@ exports = module.exports = function (app) {
 	  console.log("Time:",req.body.entry[0].time);
 	  console.log("FROM:",req.body.entry[0].changes[0].value.from);
 	  console.log("POST:",req.body.entry[0].changes[0].value.post);
+	  var isXHub = req.isXHub;
+	  if(!isXHub) { console.log('No X-Hub Signature')}
 
-	  if (!req.isXHubValid()) {
+	  var isValid = req.isXHubValid();
+	  if (!isValid) {
 	    console.log('Warning - request header X-Hub-Signature not present or invalid');
 	    res.sendStatus(401);
 	    return;
@@ -104,4 +102,9 @@ exports = module.exports = function (app) {
 	  // Process the Facebook updates here
 	  res.sendStatus(200);
 	});
+
+	app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
+	app.use(bodyParser.json());
+	app.use(methodOverride());
+
 };
