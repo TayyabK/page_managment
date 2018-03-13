@@ -80,7 +80,7 @@ exports = module.exports = function (app) {
 	  }
 	});
 
-	app.post('/facebook', function(req, res) {
+	app.post('/facebook',xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }), function(req, res) {
 	  console.log('Facebook request body:', req.body);
 	  console.log("ENTRY:",req.body.entry);
 	  console.log("ID:",req.body.entry[0].id);
@@ -91,7 +91,7 @@ exports = module.exports = function (app) {
 	  var isXHub = req.isXHub;
 	  if(!isXHub) { console.log('No X-Hub Signature')}
 	  	console.log(req.headers);
-	  var isValid = req.headers.isXHubValid();
+	  var isValid = req.isXHubValid();
 	  if (!isValid) {
 	    console.log('Warning - request header X-Hub-Signature not present or invalid');
 	    res.sendStatus(401);
@@ -103,8 +103,8 @@ exports = module.exports = function (app) {
 	  res.sendStatus(200);
 	});
 
-	app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
-	app.use(bodyParser.json());
+/*	app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
+*/	app.use(bodyParser.json());
 	app.use(methodOverride());
 
 };
