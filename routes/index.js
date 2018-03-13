@@ -88,6 +88,8 @@ exports = module.exports = function (app) {
 	  console.log("ID:",req.body.entry[0].id);
 	  console.log("Changes:",req.body.entry[0].changes);
 	  console.log("Time:",req.body.entry[0].time);
+	  console.log("FROM:",req.body.entry[0].changes[0].value.from);
+	  console.log("FROM:",req.body.entry[0].changes[0].value.post);
 /*	  if (!req.isXHubValid()) {
 	    console.log('Warning - request header X-Hub-Signature not present or invalid');
 	    res.sendStatus(401);
