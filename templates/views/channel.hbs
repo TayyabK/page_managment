@@ -64,11 +64,8 @@
 						<div class="account">
 							<p class="account-title">{{pagename}}</p>
 							<div class="account-brand">
-								{{#ifeq status 'unsubscribe'}}
-								<button class="btn btn-success" id="unsubscribe-{{pageId}}">Unsubscribe</button>
-								{{else}}
-								<button class="btn btn-success" id="subscribe-{{pageId}}">Subscribe</button>
-								{{/ifeq}}
+								<button class="btn btn-success" id="unsubscribe-{{pageId}}" onclick="unsubscribePage('{{pageId}}','{{accessToken}}')">Unsubscribe</button>
+								<button class="btn btn-success" id="subscribe-{{pageId}}" onclick="subscribePage('{{pageId}}','{{accessToken}}')">Subscribe</button>
 							</div>
 						</div>
 						{{/ifeq}}
@@ -83,6 +80,17 @@
 
 <script>
 
+	{{#each Pages}}
+		if('{{status}}' == 'subscribe'){
+			$('#subscribe-{{pageId}}').hide();
+			$('#unsubscribe-{{pageId}}').show();
+		}
+		else{
+			$('#subscribe-{{pageId}}').show();
+			$('#unsubscribe-{{pageId}}').hide();
+		}
+	{{/each}}
+
 	window.fbAsyncInit = function() {
 	    FB.init({
 	      appId            : '172494766720528',
@@ -91,7 +99,7 @@
 	      version          : 'v2.12'
 	    });
 
-	    subscribePage(pageId,page_token){
+	    subscribePage = function(pageId,page_token){
 	    	FB.api(
 	    	    "/"+pageId+"/subscribed_apps",
 	    	    "POST",
@@ -100,9 +108,19 @@
 	    	    },
 	    	    function (response) {
 	    	      if (response && !response.error) {
-	    	      	console.log(response)
-	    	      	$('#subscribe-'+pageId).hide();		        
-	    	      	$('#unsubscribe-'+pageId).show();		        
+	    	      	console.log(response);
+	    	      	$.ajax(
+	    	      	{
+	    	      	    type: 'POST',
+	    	      	    data: {"Id": pageId},
+	    	      	    url: '/api/channel/subscribe',                
+	    	      	    success: function(data) 
+	    	      	    {
+			    	      	$('#subscribe-'+pageId).hide();		        
+			    	      	$('#unsubscribe-'+pageId).show();		        
+	    	      	        console.log('success subscribtion');
+	    	      	    }
+	    	      	});
 	    	      }
 	    	      else{
 	    	      	console.log(response.error)
@@ -111,7 +129,7 @@
 	    	);
 	    }
 
-	    unsubscribePage(pageId,page_token){
+	    unsubscribePage = function(pageId,page_token){
 	    	FB.api(
 	    	    "/"+pageId+"/subscribed_apps",
 	    	    "DELETE",
@@ -121,8 +139,18 @@
 	    	    function (response) {
 	    	      if (response && !response.error) {
 	    	      	console.log(response)
-	    	      	$('#subscribe-'+pageId).show();
-	    	      	$('#unsubscribe-'+pageId).hide();
+  	    	      	$.ajax(
+  	    	      	{
+  	    	      	    type: 'POST',
+  	    	      	    data: {"Id": pageId},
+  	    	      	    url: '/api/channel/unsubscribe',                
+  	    	      	    success: function(data) 
+  	    	      	    {
+			    	      	$('#subscribe-'+pageId).show();
+			    	      	$('#unsubscribe-'+pageId).hide();
+  	    	      	        console.log('success unsubscribtion');
+  	    	      	    }
+  	    	      	});
 	    	      }
 	    	      else{
 	    	      	console.log(response.error)

@@ -29,6 +29,7 @@ passport.deserializeUser(function(userId, done) {
 // Import Route Controllers
 var routes = {
 	views: importRoutes('./views'),
+	api: importRoutes('./api'),
 };
 
 
@@ -49,6 +50,12 @@ exports = module.exports = function (app) {
 	app.get('/page', routes.views.page);
 	app.get('/post', routes.views.post);
 	app.get('/subscribe', routes.views.subscribe);
+
+
+	// API's
+
+	app.post('/api/channel/subscribe', routes.api.channel.subscribe);
+	app.post('/api/channel/unsubscribe', routes.api.channel.unsubscribe);
 
 
 	app.get('/auth/facebook',
