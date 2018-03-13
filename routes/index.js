@@ -91,8 +91,7 @@ exports = module.exports = function (app) {
 	  var isXHub = req.isXHub;
 	  if(!isXHub) { console.log('No X-Hub Signature')}
 	  	console.log(req.headers);
-	  	console.log(req);
-	  var isValid = req.isXHubValid();
+	  var isValid = req.headers.isXHubValid();
 	  if (!isValid) {
 	    console.log('Warning - request header X-Hub-Signature not present or invalid');
 	    res.sendStatus(401);
