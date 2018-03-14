@@ -85,13 +85,18 @@ exports = module.exports = function (app) {
 	});
 
 	app.post('/facebook', function(req, res) {
-	  console.log('Facebook request body:', req.body);
-	  console.log("ENTRY:",req.body.entry);
+/*	  console.log('Facebook request body:', req.body);
+	  console.log("ENTRY:",req.body.entry);*/
 	  console.log("ID:",req.body.entry[0].id);
-	  console.log("Changes:",req.body.entry[0].changes);
-	  console.log("Time:",req.body.entry[0].time);
-	  console.log("FROM:",req.body.entry[0].changes[0].value.from);
-	  console.log("POST:",req.body.entry[0].changes[0].value.post);
+	  console.log("Field:",req.body.entry[0].changes[0].field);
+	  console.log("FROMID:",req.body.entry[0].changes[0].value.from.id);
+	  console.log("FROMID:",req.body.entry[0].changes[0].value.from.name);
+	  console.log("ITEM:",req.body.entry[0].changes[0].value.item);
+	  console.log("PostId:",req.body.entry[0].changes[0].value.comment_id);
+	  console.log("CommentId:",req.body.entry[0].changes[0].value.post_id);
+	  console.log("Time:",req.body.entry[0].changes[0].value.created_time);
+	  console.log("message:",req.body.entry[0].changes[0].value.message);
+	  console.log("Action:",req.body.entry[0].changes[0].value.verb);
 /*	  var isXHub = req.isXHub;
 	  if(!isXHub) { console.log('No X-Hub Signature')}
 	  	console.log(req.headers);
