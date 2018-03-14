@@ -56,7 +56,7 @@
 						{{#each ../Pages}}
 						{{#ifeq ../accountId accountId}}
 						<div class="account">
-							<p class="account-title">{{pagename}}</p>
+							<a href="/page?Id={{pageId}}"><p class="account-title">{{pagename}}</p></a>
 							<div class="account-brand">
 								<button class="btn btn-success" id="unsubscribe-{{pageId}}" onclick="unsubscribePage('{{pageId}}','{{accessToken}}')">Unsubscribe</button>
 								<button class="btn btn-success" id="subscribe-{{pageId}}" onclick="subscribePage('{{pageId}}','{{accessToken}}')">Subscribe</button>

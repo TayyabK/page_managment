@@ -16,12 +16,12 @@ Ticket.add({
 	postId: { type: String },
 	commentId: { type: String },
 	action: { type: String },
-	message: { type: String},
+	message: { type: String },
 	status: { type: String, default: 'New'}
 });
 
 /**
  * Registration
  */
-Ticket.defaultColumns = '';
+Ticket.defaultColumns = 'field,fromName,item,action,message,status';
 Ticket.register();

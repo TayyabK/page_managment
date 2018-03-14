@@ -62,7 +62,7 @@ exports = module.exports = function (app) {
 
 	app.get('/auth/facebook',
 		passport.authenticate('facebook', {
-			scope : ['email','manage_pages','publish_pages']
+			scope : ['email','manage_pages','publish_pages','read_page_mailboxes']
 		}
 	));
 

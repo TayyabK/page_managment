@@ -1,12 +1,41 @@
-<div class="container">
-	<h2 class="text-center">{{pagename}} BY {{user.name.full}}</h2>
-	<div class="posts">
-		<textarea id="post_msg"></textarea>
-		<button class="btn btn-success" id="add_post_btn">Add Post</button>
-		<h3>Posts</h3>		
+<main id="main">
+	<div class="title">
+		<div class="titles">
+			<h2>Page</h2>
+			<p>Manage tickets.</p>
+		</div>
 	</div>
-</div>
-
+	<div class="content">
+		<button class="btn btn-success btn-lg">Tickets({{ticketcount}})</button>
+		<div>
+			<h3>List of Tickets</h3>
+			{{#each Tickets}}
+			<div class="row">
+			<div class="col-sm-2">
+				<h4>Ticket Type</h4>
+				<p>{{item}}</p>
+			</div>
+			<div class="col-sm-2">
+				<h4>From</h4>
+				<p>{{fromName}}</p>
+			</div>
+			<div class="col-sm-3">
+				<h4>Message</h4>
+				<p>{{message}}</p>
+			</div>
+			<div class="col-sm-2">
+				<h4>Status</h4>
+				<p>{{status}}</p>
+			</div>
+			<div class="col-sm-3">
+			<textarea id="{{commentId}}-text"></textarea>
+			<button onclick="replytocomment('{{commentId}}')">comment</button>
+			</div>
+			</div>
+			{{/each}}
+		</div>
+	</div>
+</main>
 
 <script>
 
@@ -18,7 +47,7 @@
 	      version          : 'v2.12'
 	    });
 
-		FB.api(
+/*		FB.api(
 		    "/{{pageid}}/posts?access_token={{user.accesstoken}}",
 		    function (response) {
 		      if (response && !response.error) {
@@ -45,6 +74,29 @@
 		      }
 		    }
 		);
+*/
+
+		replytocomment = function(commentId){
+			debugger;
+			FB.api(
+			    "/"+commentId+'/comments',
+			    "POST",
+			    {
+			        "message": $('#'+commentId+'-text').val(),
+			        "access_token": '{{Page.accessToken}}'
+			    },
+			    function (response) {
+			      if (response && !response.error) {
+			        /* handle the result */
+			        console.log(response)
+			      }
+			      else{
+			      	console.log(response.error)	
+			      }
+			    }
+			);
+		}
+
 
 		$('#add_post_btn').click(function() {
 			var message = $('#post_msg').val()
