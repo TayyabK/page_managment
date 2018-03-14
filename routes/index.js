@@ -87,6 +87,7 @@ exports = module.exports = function (app) {
 	app.post('/facebook', function(req, res) {
 /*	  console.log('Facebook request body:', req.body);
 	  console.log("ENTRY:",req.body.entry);*/
+
 	  console.log("ID:",req.body.entry[0].id);
 	  console.log("Field:",req.body.entry[0].changes[0].field);
 	  console.log("FROMID:",req.body.entry[0].changes[0].value.from.id);
@@ -97,6 +98,37 @@ exports = module.exports = function (app) {
 	  console.log("Time:",req.body.entry[0].changes[0].value.created_time);
 	  console.log("message:",req.body.entry[0].changes[0].value.message);
 	  console.log("Action:",req.body.entry[0].changes[0].value.verb);
+
+
+	  if(req.body.entry[0].changes[0].value.item == 'comment')
+	  {
+	  	if(req.body.entry[0].changes[0].value.verb == 'add')
+	  	{
+	  		var new_comment = {
+	  			entryId: req.body.entry[0].id,
+	  			field: req.body.entry[0].changes[0].field,
+	  			fromId: req.body.entry[0].changes[0].value.from.id,
+	  			fromName: req.body.entry[0].changes[0].value.from.name,
+	  			item: req.body.entry[0].changes[0].value.item,
+	  			postId: req.body.entry[0].changes[0].value.post_id,
+	  			commentId: req.body.entry[0].changes[0].value.comment_id,
+	  			action: req.body.entry[0].changes[0].value.verb,
+	  			message: req.body.entry[0].changes[0].value.message
+	  		}
+
+	  		var Ticket = keystone.list('Ticket').model,
+	  			newTicket = new Ticket(new_comment);
+
+	  			newTicket.save(function(err){
+	  				if(err)
+	  					throw err;
+	  			})
+
+	  	}
+	  }
+
+
+
 /*	  var isXHub = req.isXHub;
 	  if(!isXHub) { console.log('No X-Hub Signature')}
 	  	console.log(req.headers);
