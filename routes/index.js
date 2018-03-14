@@ -40,6 +40,10 @@ var token = process.env.TOKEN || 'token';
 // Setup Route Bindings
 exports = module.exports = function (app) {
 	// Views
+/*	app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
+	app.use(bodyParser.json());
+	app.use(methodOverride());
+*/
 
 	app.all('/', routes.views.index);
 	app.all('/signup', routes.views.signup);
@@ -80,7 +84,7 @@ exports = module.exports = function (app) {
 	  }
 	});
 
-	app.post('/facebook',xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }), function(req, res) {
+	app.post('/facebook', function(req, res) {
 	  console.log('Facebook request body:', req.body);
 	  console.log("ENTRY:",req.body.entry);
 	  console.log("ID:",req.body.entry[0].id);
@@ -88,7 +92,7 @@ exports = module.exports = function (app) {
 	  console.log("Time:",req.body.entry[0].time);
 	  console.log("FROM:",req.body.entry[0].changes[0].value.from);
 	  console.log("POST:",req.body.entry[0].changes[0].value.post);
-	  var isXHub = req.isXHub;
+/*	  var isXHub = req.isXHub;
 	  if(!isXHub) { console.log('No X-Hub Signature')}
 	  	console.log(req.headers);
 	  var isValid = req.isXHubValid();
@@ -99,12 +103,9 @@ exports = module.exports = function (app) {
 	  }
 
 	  console.log('request header X-Hub-Signature validated');
-	  // Process the Facebook updates here
+*/	  // Process the Facebook updates here
 	  res.sendStatus(200);
 	});
 
-/*	app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
-*/	app.use(bodyParser.json());
-	app.use(methodOverride());
 
 };
