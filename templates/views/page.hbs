@@ -83,12 +83,22 @@
 			    "POST",
 			    {
 			        "message": $('#'+commentId+'-text').val(),
-			        "access_token": '{{Page.accessToken}}'
+			        "access_token": '{{Page.accessToken}}',
+			        "can_hide": false
 			    },
 			    function (response) {
 			      if (response && !response.error) {
 			        /* handle the result */
 			        console.log(response)
+			        FB.api(
+			            "/"+response.id,
+			            function (response) {
+			              if (response && !response.error) {
+			                console.log(response)
+			                /* handle the result */
+			              }
+			            }
+			        );
 			      }
 			      else{
 			      	console.log(response.error)	
