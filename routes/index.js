@@ -128,12 +128,25 @@ exports = module.exports = function (app) {
 	  	}
 	  }
 
-	  if(req.body.entry[0].changes[0].value.item == 'conversations')
+	  if(req.body.entry[0].changes[0].field == 'conversations')
 	  {
-	  	console.log("I'm A converstation")
+	  	var new_converstation = {
+	  		entryId: req.body.entry[0].id,
+	  		field: req.body.entry[0].changes[0].field,
+	  		threadId: req.body.entry[0].changes[0].value.thread_id
+	  	}
+
+	  	var Ticket = keystone.list('Ticket').model,
+	  		newTicket = new Ticket(new_converstation);
+
+	  		newTicket.save(function(err){
+	  			if(err)
+	  				throw err;
+	  		})
 	  }
 
 
+	  res.sendStatus(200);
 
 /*	  var isXHub = req.isXHub;
 	  if(!isXHub) { console.log('No X-Hub Signature')}
@@ -147,7 +160,6 @@ exports = module.exports = function (app) {
 
 	  console.log('request header X-Hub-Signature validated');
 */	  // Process the Facebook updates here
-	  res.sendStatus(200);
 	});
 
 
