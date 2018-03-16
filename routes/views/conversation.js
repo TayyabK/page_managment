@@ -1,5 +1,6 @@
 var keystone = require('keystone');
 var Page = keystone.list('Page');
+var Ticket = keystone.list('Ticket');
 
 exports = module.exports = function (req, res) {
 
@@ -12,7 +13,25 @@ exports = module.exports = function (req, res) {
 
 	locals.conversationid = req.query.Id;
 	locals.pageId = req.query.pageid;
+	locals.ticketId = req.query.ticketid;
 	view.query('Page', Page.model.findOne({pageId: req.query.pageid}));
+
+	view.on('post', { action: 'CloseTicket' }, function(next){
+		Ticket.model.findOne({_id: req.query.ticketid}).exec(function(err,doc){
+			if(err)
+			{
+				throw err;
+			}
+			if(doc){
+				doc.status = 'Closed';
+				doc.save();
+				next();
+			}
+			else{
+				next();
+			}
+		})
+	});
 
 	view.render('conversation');
 };

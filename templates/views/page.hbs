@@ -46,7 +46,7 @@
 					</div>
 					<div class="col-sm-3">
 						<h4>Details</h4>
-						<p><a href="/conversations?Id={{threadId}}&pageid={{../Page.pageId}}">View</a></p>
+						<p><a href="/conversations?Id={{threadId}}&pageid={{../Page.pageId}}&ticketid={{id}}">View</a></p>
 					</div>
 					<div class="col-sm-2">
 						<h4>Status</h4>
@@ -101,7 +101,6 @@
 */
 
 		replytocomment = function(commentId){
-			debugger;
 			FB.api(
 			    "/"+commentId+'/comments',
 			    "POST",
@@ -115,7 +114,6 @@
 			        /* handle the result */
 			        console.log(response)
 			        FB.api(
-			            debugger;
 			            "/"+response.id,
 			            function (response) {
 			              if (response && !response.error) {
