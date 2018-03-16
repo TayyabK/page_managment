@@ -3,7 +3,7 @@ var keystone = require('keystone'),
 	passport = require('passport'),
 	importRoutes = keystone.importer(__dirname),
 	User = keystone.list('User'),
-	Ticket = keystone.list('Ticket'),
+	Tickets = keystone.list('Ticket'),
 	bodyParser = require('body-parser');
 
 var xhub = require('express-x-hub');
@@ -131,7 +131,9 @@ exports = module.exports = function (app) {
 
 	  if(req.body.entry[0].changes[0].field == 'conversations')
 	  {
-	  	Ticket.model.findOne({threadId: req.body.entry[0].changes[0].value.thread_id}).where('status','New').exec(function(err,doc){
+	  	var threadIdval = req.body.entry[0].changes[0].value.thread_id;
+	  	console.log(threadIdval);
+	  	Tickets.model.findOne({threadId: threadIdval}).where('status', 'New').exec(function(err,doc){
 	  		if(err){
 	  			throw err;
 	  		}
