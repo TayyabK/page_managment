@@ -85,12 +85,13 @@ exports = module.exports = function (app) {
 	});
 
 	app.post('/facebook', function(req, res) {
-/*	  console.log('Facebook request body:', req.body);
-	  console.log("ENTRY:",req.body.entry);*/
+	  console.log('Facebook request body:', req.body);
+	  console.log("ENTRY:",req.body.entry);
 
 	  console.log("ID:",req.body.entry[0].id);
 	  console.log("Field:",req.body.entry[0].changes[0].field);
-	  console.log("FROMID:",req.body.entry[0].changes[0].value.from.id);
+	  console.log("Changes:", req.body.entry[0].changes[0]);
+/*	  console.log("FROMID:",req.body.entry[0].changes[0].value.from.id);
 	  console.log("FROMID:",req.body.entry[0].changes[0].value.from.name);
 	  console.log("ITEM:",req.body.entry[0].changes[0].value.item);
 	  console.log("PostId:",req.body.entry[0].changes[0].value.comment_id);
@@ -98,7 +99,7 @@ exports = module.exports = function (app) {
 	  console.log("Time:",req.body.entry[0].changes[0].value.created_time);
 	  console.log("message:",req.body.entry[0].changes[0].value.message);
 	  console.log("Action:",req.body.entry[0].changes[0].value.verb);
-
+*/
 
 	  if(req.body.entry[0].changes[0].value.item == 'comment')
 	  {
@@ -125,6 +126,11 @@ exports = module.exports = function (app) {
 	  			})
 
 	  	}
+	  }
+
+	  if(req.body.entry[0].changes[0].value.item == 'conversations')
+	  {
+	  	console.log("I'm A converstation")
 	  }
 
 
