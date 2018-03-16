@@ -19,10 +19,10 @@ Ticket.add({
 		commentId: { type: String },
 		action: { type: String },
 		message: { type: String }
-	},'Conversations'{
+	},'Conversations',{
 		threadId: { type: String }
 	}
-});
+);
 
 /**
  * Registration
