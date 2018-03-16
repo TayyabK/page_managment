@@ -49,6 +49,7 @@ exports = module.exports = function (app) {
 	app.all('/signup', routes.views.signup);
 	app.get('/signout', routes.views.signout);
 	app.all('/channel', routes.views.channel);
+	app.all('/conversations', routes.views.conversation);
 	app.get('/page', routes.views.page);
 	app.get('/post', routes.views.post);
 	app.get('/subscribe', routes.views.subscribe);
@@ -130,19 +131,30 @@ exports = module.exports = function (app) {
 
 	  if(req.body.entry[0].changes[0].field == 'conversations')
 	  {
-	  	var new_converstation = {
-	  		entryId: req.body.entry[0].id,
-	  		field: req.body.entry[0].changes[0].field,
-	  		threadId: req.body.entry[0].changes[0].value.thread_id
-	  	}
+	  	Ticket.model.findOne({threadId: req.body.entry[0].changes[0].value.thread_id}).where('status','New').exec(function(err,doc){
+	  		if(err){
+	  			throw err;
+	  		}
+	  		if(doc){
+	  			console.log("On Going Conversation Ticket ---->");
+	  		}
+	  		else{
+	  			console.log("New Conversation Ticket");
+			  	var new_converstation = {
+			  		entryId: req.body.entry[0].id,
+			  		field: req.body.entry[0].changes[0].field,
+			  		threadId: req.body.entry[0].changes[0].value.thread_id
+			  	}
 
-	  	var Ticket = keystone.list('Ticket').model,
-	  		newTicket = new Ticket(new_converstation);
+			  	var Ticket = keystone.list('Ticket').model,
+			  		newTicket = new Ticket(new_converstation);
 
-	  		newTicket.save(function(err){
-	  			if(err)
-	  				throw err;
-	  		})
+			  		newTicket.save(function(err){
+			  			if(err)
+			  				throw err;
+			  		})
+	  		}
+	  	})
 	  }
 
 

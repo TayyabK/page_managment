@@ -10,28 +10,52 @@
 		<div>
 			<h3>List of Tickets</h3>
 			{{#each Tickets}}
-			<div class="row">
-			<div class="col-sm-2">
-				<h4>Ticket Type</h4>
-				<p>{{item}}</p>
-			</div>
-			<div class="col-sm-2">
-				<h4>From</h4>
-				<p>{{fromName}}</p>
-			</div>
-			<div class="col-sm-3">
-				<h4>Message</h4>
-				<p>{{message}}</p>
-			</div>
-			<div class="col-sm-2">
-				<h4>Status</h4>
-				<p>{{status}}</p>
-			</div>
-			<div class="col-sm-3">
-			<textarea id="{{commentId}}-text"></textarea>
-			<button onclick="replytocomment('{{commentId}}')">comment</button>
-			</div>
-			</div>
+				{{#ifeq field 'feed'}}
+					<div class="row">
+					<div class="col-sm-2">
+						<h4>Ticket Type</h4>
+						<p>{{item}}</p>
+					</div>
+					<div class="col-sm-2">
+						<h4>From</h4>
+						<p>{{fromName}}</p>
+					</div>
+					<div class="col-sm-3">
+						<h4>Message</h4>
+						<p>{{message}}</p>
+					</div>
+					<div class="col-sm-2">
+						<h4>Status</h4>
+						<p>{{status}}</p>
+					</div>
+					<div class="col-sm-3">
+					<textarea id="{{commentId}}-text"></textarea>
+					<button onclick="replytocomment('{{commentId}}')">comment</button>
+					</div>
+					</div>
+				{{/ifeq}}
+				{{#ifeq field 'conversations'}}
+					<div class="row">
+					<div class="col-sm-2">
+						<h4>Ticket Type</h4>
+						<p>{{field}}</p>
+					</div>
+					<div class="col-sm-2">
+						<h4>conversationId</h4>
+						<p>{{threadId}}</p>
+					</div>
+					<div class="col-sm-3">
+						<h4>Details</h4>
+						<p><a href="/conversations?Id={{threadId}}&pageid={{../Page.pageId}}">View</a></p>
+					</div>
+					<div class="col-sm-2">
+						<h4>Status</h4>
+						<p>{{status}}</p>
+					</div>
+					<div class="col-sm-3">
+					</div>
+					</div>
+				{{/ifeq}}				
 			{{/each}}
 		</div>
 	</div>

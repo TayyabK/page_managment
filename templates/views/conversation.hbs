@@ -1,0 +1,76 @@
+<main id="main">
+	<div class="title">
+		<div class="titles">
+			<h2>Conversations</h2>
+		</div>
+	</div>
+	<div class="content">
+		<div id="conversation">
+		
+		</div>
+		<div id="reply">
+			<textarea class="form-control" id="text"></textarea>
+			<button class="btn btn-success btn-lg" onclick="reply();">Reply</button>
+		</div>
+	</div>
+</main>
+
+<script>
+
+	window.fbAsyncInit = function() {
+	    FB.init({
+	      appId            : '172494766720528',
+	      autoLogAppEvents : true,
+	      xfbml            : true,
+	      version          : 'v2.12'
+	    });
+
+		FB.api(
+		    "{{conversationid}}/messages?fields=message,attachments,created_time,to,from,shares{link}&access_token={{Page.accessToken}}",
+		    function (response) {
+		      if (response && !response.error) {
+		        /* handle the result */
+		        console.log(response)
+		        response.data.forEach(function(result){
+		        	console.log(result.from.name)
+		        	console.log(result.message)
+		        	if(result.from.id == {{pageId}}){
+		        		var row = '<div class="row text-right"><h3>'+result.from.name+'</h3><p>'+result.message+'</p></div>';
+		        	}
+		        	else{
+		        		var row = '<div class="row"><h3>'+result.from.name+'</h3><p>'+result.message+'</p></div>';
+		        	}
+		        	$('#conversation').prepend(row);
+		        })
+		      }
+		      else{
+		      	console.log(response.error)	
+		      }
+		    }
+		);
+
+		reply = function(){
+			FB.api(
+			    "/{{conversationid}}/messages",
+			    "POST",
+			    {
+			        "message": $('#text').val(),
+			        "access_token": "{{Page.accessToken}}"
+			    },
+			    function (response) {
+			      if (response && !response.error) {
+			        console.log(response)
+			      }
+			    }
+			);
+		}
+	};
+	(function(d, s, id){
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.id = id;
+		js.src = "https://connect.facebook.net/en_US/sdk.js";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+
+</script>
