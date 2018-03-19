@@ -20,7 +20,9 @@ Ticket.add({
 		action: { type: String },
 		message: { type: String }
 	},'Conversations',{
-		threadId: { type: String }
+		threadId: { type: String },
+		startCursor: { type: String},
+		endCursor: { type: String}
 	}
 );
 

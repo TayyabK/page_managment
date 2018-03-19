@@ -51,6 +51,7 @@ exports = module.exports = function (app) {
 	app.all('/channel', routes.views.channel);
 	app.all('/conversations', routes.views.conversation);
 	app.get('/page', routes.views.page);
+	app.get('/policy', routes.views.policy);
 	app.get('/post', routes.views.post);
 	app.get('/subscribe', routes.views.subscribe);
 
@@ -106,26 +107,33 @@ exports = module.exports = function (app) {
 	  {
 	  	if(req.body.entry[0].changes[0].value.verb == 'add')
 	  	{
-	  		var new_comment = {
-	  			entryId: req.body.entry[0].id,
-	  			field: req.body.entry[0].changes[0].field,
-	  			fromId: req.body.entry[0].changes[0].value.from.id,
-	  			fromName: req.body.entry[0].changes[0].value.from.name,
-	  			item: req.body.entry[0].changes[0].value.item,
-	  			postId: req.body.entry[0].changes[0].value.post_id,
-	  			commentId: req.body.entry[0].changes[0].value.comment_id,
-	  			action: req.body.entry[0].changes[0].value.verb,
-	  			message: req.body.entry[0].changes[0].value.message
+	  		if(req.body.entry[0].id == req.body.entry[0].changes[0].value.from.id)
+	  		{
+	  			console.log("On going Comment Ticket");
 	  		}
+	  		else
+	  		{
+	  			console.log("New Comment Ticket");
+		  		var new_comment = {
+		  			entryId: req.body.entry[0].id,
+		  			field: req.body.entry[0].changes[0].field,
+		  			fromId: req.body.entry[0].changes[0].value.from.id,
+		  			fromName: req.body.entry[0].changes[0].value.from.name,
+		  			item: req.body.entry[0].changes[0].value.item,
+		  			postId: req.body.entry[0].changes[0].value.post_id,
+		  			commentId: req.body.entry[0].changes[0].value.comment_id,
+		  			action: req.body.entry[0].changes[0].value.verb,
+		  			message: req.body.entry[0].changes[0].value.message
+		  		}
 
-	  		var Ticket = keystone.list('Ticket').model,
-	  			newTicket = new Ticket(new_comment);
+		  		var Ticket = keystone.list('Ticket').model,
+		  			newTicket = new Ticket(new_comment);
 
 	  			newTicket.save(function(err){
 	  				if(err)
 	  					throw err;
-	  			})
-
+	  			})	  			
+	  		}
 	  	}
 	  }
 

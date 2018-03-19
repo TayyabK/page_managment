@@ -106,8 +106,7 @@
 			    "POST",
 			    {
 			        "message": $('#'+commentId+'-text').val(),
-			        "access_token": '{{Page.accessToken}}',
-			        "can_hide": false
+			        "access_token": '{{Page.accessToken}}'
 			    },
 			    function (response) {
 			      if (response && !response.error) {
