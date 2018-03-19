@@ -19,8 +19,8 @@
 			</form>
 		</div>
 	</div>
+{{Ticket}}
 </main>
-
 <script>
 
 	window.fbAsyncInit = function() {
@@ -38,15 +38,24 @@
 		        /* handle the result */
 		        console.log(response)
 		        response.data.forEach(function(result){
-		        	console.log(result.from.name)
-		        	console.log(result.message)
-		        	if(result.from.id == {{pageId}}){
-		        		var row = '<div class="row text-right"><h3>'+result.from.name+'</h3><p>'+result.message+'</p></div>';
+		        	var check_before = moment('{{Ticket.startTime}}').isBefore(result.created_time);
+		        	{{#if Ticket.endTime}}
+			        	var check_after = moment('{{Ticket.endTime}}').isAfter(result.created_time);
+			        	{{else}}
+			        		var check_after = true;
+			        {{/if}}
+			        console.log("CHECK BEFORE : "+check_before);
+			        console.log("CHECK AFTER : "+check_after);
+		        	if(check_before && check_after)
+		        	{
+			        	if(result.from.id == {{pageId}}){
+			        		var row = '<div class="row text-right"><h3>'+result.from.name+'</h3><p>'+result.message+'</p></div>';
+			        	}
+			        	else{
+			        		var row = '<div class="row"><h3>'+result.from.name+'</h3><p>'+result.message+'</p></div>';
+			        	}
+		        		$('#conversation').prepend(row);
 		        	}
-		        	else{
-		        		var row = '<div class="row"><h3>'+result.from.name+'</h3><p>'+result.message+'</p></div>';
-		        	}
-		        	$('#conversation').prepend(row);
 		        })
 		      }
 		      else{

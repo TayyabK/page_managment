@@ -1,5 +1,6 @@
 var keystone = require('keystone');
 var Types = keystone.Field.Types;
+var moment = require('moment');
 
 /**
  * User Model
@@ -10,7 +11,9 @@ var Ticket = new keystone.List('Ticket');
 Ticket.add({
 		entryId: { type: String },
 		field: { type: String },
-		status: { type: String, default: 'New'}
+		status: { type: String, default: 'New'},
+		startTime: { type: Date, default: moment().subtract(20, 'seconds')},
+		endTime: { type: Date}
 	},'Comments',{
 		fromId: { type: String },
 		fromName: { type: String },
@@ -20,9 +23,7 @@ Ticket.add({
 		action: { type: String },
 		message: { type: String }
 	},'Conversations',{
-		threadId: { type: String },
-		startCursor: { type: String},
-		endCursor: { type: String}
+		threadId: { type: String }
 	}
 );
 

@@ -15,6 +15,7 @@ exports = module.exports = function (req, res) {
 	locals.pageId = req.query.pageid;
 	locals.ticketId = req.query.ticketid;
 	view.query('Page', Page.model.findOne({pageId: req.query.pageid}));
+	view.query('Ticket', Ticket.model.findOne({_id: req.query.ticketid}));
 
 	view.on('post', { action: 'CloseTicket' }, function(next){
 		Ticket.model.findOne({_id: req.query.ticketid}).exec(function(err,doc){
@@ -24,6 +25,7 @@ exports = module.exports = function (req, res) {
 			}
 			if(doc){
 				doc.status = 'Closed';
+				doc.endTime = Date.now();
 				doc.save();
 				next();
 			}
