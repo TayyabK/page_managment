@@ -21,7 +21,9 @@ Ticket.add({
 		postId: { type: String },
 		commentId: { type: String },
 		action: { type: String },
-		message: { type: String }
+		message: { type: String },
+		parentid: { type: String},
+		commentType: { type: String }
 	},'Conversations',{
 		threadId: { type: String }
 	}

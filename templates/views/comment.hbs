@@ -1,0 +1,109 @@
+<main id="main">
+	<div class="title">
+		<div class="titles">
+			<h2>Comment</h2>
+		</div>
+	</div>
+	<div class="content">
+		<h2 class="text-center">{{Ticket.message}}</h2>
+		<p class="text-center">By {{Ticket.fromName}}</p>
+		<div id="comments">
+		
+		</div>
+		<div id="reply">
+			<textarea class="form-control" id="text"></textarea>
+			<button class="btn btn-success btn-lg" onclick="replytocomment();">Reply</button>
+		</div>
+		<div>
+			<form method="post">
+				<input type="hidden" name="action" value="CloseTicket">
+				<button type="submit" class="btn btn-danger">Close Ticket</button>
+			</form>
+		</div>
+	</div>
+</main>
+
+<script type="text/javascript">
+
+	{{#ifeq Ticket.commentType 'Reply'}}
+		var id = '{{Ticket.parentid}}';
+		{{else}}
+		var id = '{{Ticket.commentId}}';
+	{{/ifeq}}
+	window.fbAsyncInit = function() {
+	    FB.init({
+	      appId            : '172494766720528',
+	      autoLogAppEvents : true,
+	      xfbml            : true,
+	      version          : 'v2.12'
+	    });
+
+		FB.api(
+		    "/"+id+"/comments?access_token={{Page.accessToken}}",
+		    function (response) {
+		      if (response && !response.error) {
+		        /* handle the result */
+		        console.log(response);
+		        response.data.forEach(function(result){
+		        	var check_before = moment(new Date('{{Ticket.startTime}}')).isBefore(new Date(result.created_time));
+		        	{{#if Ticket.endTime}}
+			        	var check_after = moment(new Date('{{Ticket.endTime}}')).isAfter(new Date(result.created_time));
+			        	{{else}}
+			        		var check_after = true;
+			        {{/if}}
+
+		        	if(check_before && check_after)
+		        	{
+		        		var row = '<div class="row"><h3>'+result.message+'</h3><p>By'+result.from.name+'</p></div>';
+		        		$('#comments').append(row);
+		        	}
+		        });
+		      }
+		      else{
+		      	console.log(response.error)
+		      }
+		    }
+		);
+
+		replytocomment = function(){
+			FB.api(
+			    "/"+id+"/comments",
+			    "POST",
+			    {
+			        "message": $('#text').val(),
+			        "access_token": '{{Page.accessToken}}'
+			    },
+			    function (response) {
+			      if (response && !response.error) {
+			        /* handle the result */
+			        console.log(response)
+			        $('#text').val('');
+			        FB.api(
+			            "/"+response.id+"?access_token={{Page.accessToken}}",
+			            function (response) {
+			              if (response && !response.error) {
+			                console.log(response)
+			                var row = '<div class="row"><h3>'+response.message+'</h3><p>By'+response.from.name+'</p></div>';
+			                $('#comments').append(row);
+			                /* handle the result */
+			              }
+			            }
+			        );
+			      }
+			      else{
+			      	console.log(response.error)	
+			      }
+			    }
+			);
+		}
+
+	};
+	(function(d, s, id){
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.id = id;
+		js.src = "https://connect.facebook.net/en_US/sdk.js";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+
+</script>

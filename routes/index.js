@@ -50,6 +50,7 @@ exports = module.exports = function (app) {
 	app.get('/signout', routes.views.signout);
 	app.all('/channel', routes.views.channel);
 	app.all('/conversations', routes.views.conversation);
+	app.all('/comments', routes.views.comment);
 	app.get('/page', routes.views.page);
 	app.get('/policy', routes.views.policy);
 	app.get('/post', routes.views.post);
@@ -113,11 +114,41 @@ exports = module.exports = function (app) {
 	  		}
 	  		else
 	  		{
-	  			Tickets.model.findOne({commentId: req.body.entry[0].changes[0].value.parent_id}).where('status','New').exec(function(err,doc){
+	  			Tickets.model.find({commentId: req.body.entry[0].changes[0].value.parent_id}).exec(function(err,doc){
 	  				if(err){
 	  					throw err
 	  				}
 	  				if(doc){
+	  					var bool = true;
+	  					doc.forEach(function(result){
+	  						if(result.status == 'New'){
+	  							bool = false;
+	  						}
+	  					})
+	  					if(bool){
+				  			console.log("New Comment Ticket");
+					  		var new_comment = {
+					  			entryId: req.body.entry[0].id,
+					  			field: req.body.entry[0].changes[0].field,
+					  			fromId: req.body.entry[0].changes[0].value.from.id,
+					  			fromName: req.body.entry[0].changes[0].value.from.name,
+					  			item: req.body.entry[0].changes[0].value.item,
+					  			postId: req.body.entry[0].changes[0].value.post_id,
+					  			commentId: req.body.entry[0].changes[0].value.comment_id,
+					  			action: req.body.entry[0].changes[0].value.verb,
+					  			message: req.body.entry[0].changes[0].value.message,
+					  			parentid: req.body.entry[0].changes[0].value.parent_id,
+					  			commentType: 'Reply'
+					  		}
+
+					  		var Ticket = keystone.list('Ticket').model,
+					  			newTicket = new Ticket(new_comment);
+
+				  			newTicket.save(function(err){
+				  				if(err)
+				  					throw err;
+				  			})	  						
+	  					}
 	  					console.log("On going Comment Ticket");	  					
 	  				}
 	  				else{
@@ -131,7 +162,9 @@ exports = module.exports = function (app) {
 				  			postId: req.body.entry[0].changes[0].value.post_id,
 				  			commentId: req.body.entry[0].changes[0].value.comment_id,
 				  			action: req.body.entry[0].changes[0].value.verb,
-				  			message: req.body.entry[0].changes[0].value.message
+				  			message: req.body.entry[0].changes[0].value.message,
+				  			parentid: req.body.entry[0].changes[0].value.parent_id,
+				  			commentType: 'Comment'
 				  		}
 
 				  		var Ticket = keystone.list('Ticket').model,
