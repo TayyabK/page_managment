@@ -199,4 +199,36 @@ exports = module.exports = function (app) {
 	});
 
 
+		app.get('/instagram', function(req, res) {   
+		  if (
+		    req.params('hub.mode') == 'subscribe' &&
+		    req.params('hub.verify_token') == token
+		  ) {
+		    res.send(req.params('hub.challenge'));
+		  } else {
+		    res.sendStatus(400);
+		  }
+		});
+
+		app.post('/instagram', function(req, res) {
+		  console.log('Facebook request body:', req.body);
+		  console.log("ENTRY:",req.body.entry);
+
+		  console.log("ID:",req.body.entry[0].id);
+		  console.log("Field:",req.body.entry[0].changes[0].field);
+		  console.log("Changes:", req.body.entry[0].changes[0]);
+	/*	  console.log("FROMID:",req.body.entry[0].changes[0].value.from.id);
+		  console.log("FROMID:",req.body.entry[0].changes[0].value.from.name);
+		  console.log("ITEM:",req.body.entry[0].changes[0].value.item);
+		  console.log("PostId:",req.body.entry[0].changes[0].value.comment_id);
+		  console.log("CommentId:",req.body.entry[0].changes[0].value.post_id);
+		  console.log("Time:",req.body.entry[0].changes[0].value.created_time);
+		  console.log("message:",req.body.entry[0].changes[0].value.message);
+		  console.log("Action:",req.body.entry[0].changes[0].value.verb);
+	*/
+
+		  res.sendStatus(200);
+		});
+
+
 };
