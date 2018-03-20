@@ -40,10 +40,10 @@ var token = process.env.TOKEN || 'token';
 // Setup Route Bindings
 exports = module.exports = function (app) {
 	// Views
-	app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
+/*	app.use(xhub({ algorithm: 'sha1', secret: process.env.APP_SECRET }));
 	app.use(bodyParser.json());
 	app.use(methodOverride());
-
+*/
 
 	app.all('/', routes.views.index);
 	app.all('/signup', routes.views.signup);
@@ -201,10 +201,10 @@ exports = module.exports = function (app) {
 
 		app.get('/instagram', function(req, res) {   
 		  if (
-		    req.params.hub.mode == 'subscribe' &&
-		    req.params.hub.verify_token == token
+		    req.params('hub.mode') == 'subscribe' &&
+		    req.params('hub.verify_token') == token
 		  ) {
-		    res.send(req.params.hub.challenge);
+		    res.send(req.params('hub.challenge'));
 		  } else {
 		    res.sendStatus(400);
 		  }
