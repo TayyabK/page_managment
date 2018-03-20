@@ -19,7 +19,6 @@
 			</form>
 		</div>
 	</div>
-{{Ticket}}
 </main>
 <script>
 
@@ -73,6 +72,7 @@
 			    },
 			    function (response) {
 			      if (response && !response.error) {
+			      	$('#text').val('');
 			        console.log(response)
 			      }
 			    }
