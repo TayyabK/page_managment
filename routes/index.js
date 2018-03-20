@@ -120,6 +120,7 @@ exports = module.exports = function (app) {
 	  				}
 	  				if(doc){
 	  					doc.status = 'New';
+	  					doc.endTime = null;
 	  					doc.save();
 	  					console.log("On going Comment Ticket");
 	  				}
