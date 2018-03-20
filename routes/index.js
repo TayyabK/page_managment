@@ -114,46 +114,12 @@ exports = module.exports = function (app) {
 	  		}
 	  		else
 	  		{
-	  			Tickets.model.find({commentId: req.body.entry[0].changes[0].value.parent_id}).exec(function(err,doc){
+	  			Tickets.model.findOne({commentId: req.body.entry[0].changes[0].value.parent_id}).where('status','New').exec(function(err,doc){
 	  				if(err){
 	  					throw err
 	  				}
 	  				if(doc){
-	  					var bool = true;
-	  					doc.forEach(function(result,index,array){
-	  						if(result.status == 'New'){
-	  							bool = false;
-	  						}
-	  						if(index === array.length -1){
-			  					if(bool){
-						  			console.log("New Comment Ticket");
-							  		var new_comment = {
-							  			entryId: req.body.entry[0].id,
-							  			field: req.body.entry[0].changes[0].field,
-							  			fromId: req.body.entry[0].changes[0].value.from.id,
-							  			fromName: req.body.entry[0].changes[0].value.from.name,
-							  			item: req.body.entry[0].changes[0].value.item,
-							  			postId: req.body.entry[0].changes[0].value.post_id,
-							  			commentId: req.body.entry[0].changes[0].value.comment_id,
-							  			action: req.body.entry[0].changes[0].value.verb,
-							  			message: req.body.entry[0].changes[0].value.message,
-							  			parentid: req.body.entry[0].changes[0].value.parent_id,
-							  			commentType: 'Reply'
-							  		}
-
-							  		var Ticket = keystone.list('Ticket').model,
-							  			newTicket = new Ticket(new_comment);
-
-						  			newTicket.save(function(err){
-						  				if(err)
-						  					throw err;
-						  			})	  						
-			  					}
-			  					else{
-			  						console.log("On going Comment Ticket");
-			  					}
-	  						}
-	  					})
+	  					console.log("On going Comment Ticket");	  					
 	  				}
 	  				else{
 			  			console.log("New Comment Ticket");
@@ -166,9 +132,7 @@ exports = module.exports = function (app) {
 				  			postId: req.body.entry[0].changes[0].value.post_id,
 				  			commentId: req.body.entry[0].changes[0].value.comment_id,
 				  			action: req.body.entry[0].changes[0].value.verb,
-				  			message: req.body.entry[0].changes[0].value.message,
-				  			parentid: req.body.entry[0].changes[0].value.parent_id,
-				  			commentType: 'Comment'
+				  			message: req.body.entry[0].changes[0].value.message
 				  		}
 
 				  		var Ticket = keystone.list('Ticket').model,

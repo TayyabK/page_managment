@@ -25,11 +25,6 @@
 
 <script type="text/javascript">
 
-	{{#ifeq Ticket.commentType 'Reply'}}
-		var id = '{{Ticket.parentid}}';
-		{{else}}
-		var id = '{{Ticket.commentId}}';
-	{{/ifeq}}
 	window.fbAsyncInit = function() {
 	    FB.init({
 	      appId            : '172494766720528',
@@ -39,7 +34,7 @@
 	    });
 
 		FB.api(
-		    "/"+id+"/comments?access_token={{Page.accessToken}}",
+		    "{{commentid}}/comments?access_token={{Page.accessToken}}",
 		    function (response) {
 		      if (response && !response.error) {
 		        /* handle the result */
@@ -67,7 +62,7 @@
 
 		replytocomment = function(){
 			FB.api(
-			    "/"+id+"/comments",
+			    "/{{commentid}}/comments",
 			    "POST",
 			    {
 			        "message": $('#text').val(),
