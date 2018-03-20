@@ -114,12 +114,14 @@ exports = module.exports = function (app) {
 	  		}
 	  		else
 	  		{
-	  			Tickets.model.findOne({commentId: req.body.entry[0].changes[0].value.parent_id}).where('status','New').exec(function(err,doc){
+	  			Tickets.model.findOne({commentId: req.body.entry[0].changes[0].value.parent_id}).exec(function(err,doc){
 	  				if(err){
 	  					throw err
 	  				}
 	  				if(doc){
-	  					console.log("On going Comment Ticket");	  					
+	  					doc.status = 'New';
+	  					doc.save();
+	  					console.log("On going Comment Ticket");
 	  				}
 	  				else{
 			  			console.log("New Comment Ticket");
