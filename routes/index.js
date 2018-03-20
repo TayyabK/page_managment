@@ -201,10 +201,10 @@ exports = module.exports = function (app) {
 
 		app.get('/instagram', function(req, res) {   
 		  if (
-		    req.params('hub.mode') == 'subscribe' &&
-		    req.params('hub.verify_token') == token
+		    req.params.hub.mode == 'subscribe' &&
+		    req.params.hub.verify_token == token
 		  ) {
-		    res.send(req.params('hub.challenge'));
+		    res.send(req.params.hub.challenge);
 		  } else {
 		    res.sendStatus(400);
 		  }
