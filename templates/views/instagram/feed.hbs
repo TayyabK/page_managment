@@ -1,0 +1,57 @@
+<main id="main">
+	<div class="title">
+		<div class="titles">
+			<h2>Instagram</h2>
+			<p>{{Page.pagename}} - feed</p>
+		</div>
+	</div>
+	<div class="content">
+		<div class="row" id="insta-feed">
+			
+		</div>
+	</div>
+</main>
+
+
+<script>
+
+	window.fbAsyncInit = function() {
+	    FB.init({
+	      appId            : '172494766720528',
+	      autoLogAppEvents : true,
+	      xfbml            : true,
+	      version          : 'v2.12'
+	    });
+
+    	FB.api(
+    	    "/{{Id}}/media?fields=caption,comments_count,like_count,media_url,media_type,thumbnail_url,timestamp&access_token={{Page.accessToken}}",
+    	    function (response) {
+    	      if (response && !response.error) {
+    	      	console.log(response);
+    	      	response.data.forEach(function(result){
+    	      		console.log(result.caption);
+    	      		console.log(result.comments_count);
+    	      		console.log(result.id);
+    	      		console.log(result.like_count);
+    	      		console.log(result.media_type);
+    	      		console.log(result.media_url);
+    	      		var feed = '<div class="col-sm-6 col-md-4"><a href="/instagram/post?Id={{Id}}&postid='+result.id+'"><div class="thumbnail"><img src="'+result.media_url+'" alt="No Preview Availabe"><div class="caption"><p>'+result.caption+'</p><p class="text-right">'+result.like_count+' <i class="fa fa-heart" style="margin-right:10px"></i> '+result.comments_count+' <i class="fa fa-comment"></i></p></div></div></a></div>';
+    	      		$('#insta-feed').append(feed);
+    	      	})
+    	      }
+    	      else{
+    	      	console.log(response.error)
+    	      }
+    	    }
+    	);
+	  };
+
+	(function(d, s, id){
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.id = id;
+		js.src = "https://connect.facebook.net/en_US/sdk.js";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+
+</script>

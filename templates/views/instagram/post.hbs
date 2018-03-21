@@ -1,0 +1,54 @@
+<main id="main">
+	<div class="title">
+		<div class="titles">
+			<h2>Instagram</h2>
+			<p>{{Page.pagename}} - Post</p>
+		</div>
+	</div>
+	<div class="content">
+		<div class="row" id="insta-post">
+		</div>
+		<div class="content-box" id="comments">
+			
+		</div>
+	</div>
+</main>
+
+<script>
+
+	window.fbAsyncInit = function() {
+	    FB.init({
+	      appId            : '172494766720528',
+	      autoLogAppEvents : true,
+	      xfbml            : true,
+	      version          : 'v2.12'
+	    });
+
+    	FB.api(
+    	    "/{{postid}}?fields=caption,comments_count,like_count,media_url,media_type,comments{id,text,user{id,username}}&access_token={{Page.accessToken}}",
+    	    function (response) {
+    	      if (response && !response.error) {
+    	      	console.log(response);
+    	      	var post = '<div class="col-xs-6 col-md-3"><a href="#" class="thumbnail"><img src="'+response.media_url+'" alt="No Preview Availabe"></a><h3>'+response.caption+'</h3><p>'+response.like_count+' Likes '+response.comments_count+' Comments</p></div>';
+    	      	$('#insta-post').prepend(post);
+    	      	response.comments.data.forEach(function(result){
+    	      		var comment = '<div class="media" style="border-bottom:1px solid #DDD; padding-bottom:15px"><div class="media-body"><h5 class="media-heading"><b>'+result.user.username+'</b></h5>'+result.text+'<button class="btn btn-default pull-right">Create Ticket</button></div></div>';
+    	      		$('#comments').append(comment);
+    	      	})
+    	      }
+    	      else{
+    	      	console.log(response.error)
+    	      }
+    	    }
+    	);
+	  };
+
+	(function(d, s, id){
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.id = id;
+		js.src = "https://connect.facebook.net/en_US/sdk.js";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+
+</script>

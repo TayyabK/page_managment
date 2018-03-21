@@ -9,6 +9,15 @@ var keystone = require('keystone'),
 var xhub = require('express-x-hub');
 var methodOverride = require('method-override');
 
+const FB = require('fb');
+
+FB.options({
+  appId            : '172494766720528',
+  autoLogAppEvents : true,
+  xfbml            : true,
+  version          : 'v2.12'
+});
+
 
 // Common Middleware
 keystone.pre('routes', passport.initialize());
@@ -51,6 +60,8 @@ exports = module.exports = function (app) {
 	app.all('/channel',middleware.requireUser, routes.views.channel);
 	app.all('/conversations',middleware.requireUser, routes.views.conversation);
 	app.all('/comments',middleware.requireUser, routes.views.comment);
+	app.all('/instagramfeed',middleware.requireUser, routes.views.instagram.feed);
+	app.all('/instagram/post',middleware.requireUser, routes.views.instagram.post);
 	app.get('/page',middleware.requireUser, routes.views.page);
 	app.get('/policy', routes.views.policy);
 	app.get('/post',middleware.requireUser, routes.views.post);
@@ -211,27 +222,42 @@ exports = module.exports = function (app) {
 		  console.log("ID:",req.body.entry[0].id);
 		  console.log("Field:",req.body.entry[0].changes[0].field);
 		  console.log("Changes:", req.body.entry[0].changes[0]);
-		  if(req.body.object == 'instagram')
+		  /*if(req.body.object == 'instagram')
 		  {
 		  	if(req.body.entry[0].changes[0].field == 'comments')
 		  	{
-  		  		var new_comment = {
-  		  			entryId: req.body.entry[0].id,
-  		  			field: req.body.entry[0].changes[0].field,
-  		  			comment: req.body.entry[0].changes[0].value.text,
-  		  			comId: req.body.entry[0].changes[0].value.id,
-  		  			mediaId: req.body.entry[0].changes[0].value.media.id
-  		  		}
+  				FB.api(
+  					"/"+req.body.entry[0].changes[0].value.id+"?fields=user{id,username}",
+  					function(response){
+  						if (response && !response.error) {
+  							if(response.user.id !== req.body.entry[0].id){
+				  		  		var new_comment = {
+				  		  			entryId: req.body.entry[0].id,
+				  		  			field: req.body.entry[0].changes[0].field,
+				  		  			comment: req.body.entry[0].changes[0].value.text,
+				  		  			comId: req.body.entry[0].changes[0].value.id,
+				  		  			mediaId: req.body.entry[0].changes[0].value.media.id,
+				  		  			fromId: response.user.id,
+				  		  			fromName: response.user.username
+				  		  		}
 
-  		  		var Ticket = keystone.list('Ticket').model,
-  		  			newTicket = new Ticket(new_comment);
+				  		  		var Ticket = keystone.list('Ticket').model,
+				  		  			newTicket = new Ticket(new_comment);
 
-  	  			newTicket.save(function(err){
-  	  				if(err)
-  	  					throw err;
-  	  			})	
+				  	  			newTicket.save(function(err){
+				  	  				if(err)
+				  	  					throw err;
+				  	  			})
+  							}
+  							else{
+  								console.log("comment by admin");
+  							}
+  						}
+  					}
+  				);
+
 		  	}
-		  }
+		  }*/
 	/*	  console.log("FROMID:",req.body.entry[0].changes[0].value.from.id);
 		  console.log("FROMID:",req.body.entry[0].changes[0].value.from.name);
 		  console.log("ITEM:",req.body.entry[0].changes[0].value.item);

@@ -55,6 +55,28 @@
 					<div class="col-sm-3">
 					</div>
 					</div>
+				{{/ifeq}}
+				{{#ifeq field 'comments'}}
+					<div class="row">
+					<div class="col-sm-2">
+						<h4>Ticket Type</h4>
+						<p>{{field}}</p>
+					</div>
+					<div class="col-sm-2">
+						<h4>Text</h4>
+						<p>{{comment}}</p>
+					</div>
+					<div class="col-sm-3">
+						<h4>MediaId</h4>
+						<p>{{mediaId}}</p>
+					</div>
+					<div class="col-sm-2">
+						<h4>Status</h4>
+						<p>{{status}}</p>
+					</div>
+					<div class="col-sm-3">
+					</div>
+					</div>
 				{{/ifeq}}				
 			{{/each}}
 		</div>
