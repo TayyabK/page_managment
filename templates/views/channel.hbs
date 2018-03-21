@@ -79,10 +79,18 @@
 					{{#each Accounts}}
 					<h3>Instagram from {{name.full}}'s Account</h3>
 					<div class="accounts" id="{{accountId}}">
-						{{#each ../Pages}}
+						{{#each ../InstaPages}}
 						{{#ifeq ../accountId accountId}}
 						<div class="account">
-							<p class="account-title">{{pagename}}</p>
+							<a href="/page?Id={{pageId}}"><p class="account-title">{{pagename}}</p></a>
+							<div class="account-brand">
+								{{#ifeq status 'subscribe'}}
+								<button class="btn btn-success" id="unsubscribe-{{pageId}}" onclick="unsubscribePage('{{pageId}}','{{accessToken}}')">Unsubscribe</button>
+								{{/ifeq}}
+								{{#ifeq status 'unsubscribe'}}
+								<button class="btn btn-success" id="subscribe-{{pageId}}" onclick="subscribePage('{{pageId}}','{{accessToken}}')">Subscribe</button>
+								{{/ifeq}}
+							</div>
 						</div>
 						{{/ifeq}}
 						{{/each}}

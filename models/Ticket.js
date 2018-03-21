@@ -26,6 +26,10 @@ Ticket.add({
 		commentType: { type: String }
 	},'Conversations',{
 		threadId: { type: String }
+	},'InstagramComment',{
+		comment: { type: String },
+		comId: { type: String },
+		mediaId: { type: String }
 	}
 );
 

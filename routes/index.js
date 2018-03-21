@@ -205,12 +205,33 @@ exports = module.exports = function (app) {
 		});
 
 		app.post('/instagram', function(req, res) {
-		  console.log('Facebook request body:', req.body);
+		  console.log('instagram request body:', req.body);
 		  console.log("ENTRY:",req.body.entry);
 
 		  console.log("ID:",req.body.entry[0].id);
 		  console.log("Field:",req.body.entry[0].changes[0].field);
 		  console.log("Changes:", req.body.entry[0].changes[0]);
+		  if(req.body.object == 'instagram')
+		  {
+		  	if(req.body.entry[0].changes[0].field == 'comments')
+		  	{
+  		  		var new_comment = {
+  		  			entryId: req.body.entry[0].id,
+  		  			field: req.body.entry[0].changes[0].field,
+  		  			comment: req.body.entry[0].changes[0].value.text,
+  		  			comId: req.body.entry[0].changes[0].value.id,
+  		  			mediaId: req.body.entry[0].changes[0].value.media.id
+  		  		}
+
+  		  		var Ticket = keystone.list('Ticket').model,
+  		  			newTicket = new Ticket(new_comment);
+
+  	  			newTicket.save(function(err){
+  	  				if(err)
+  	  					throw err;
+  	  			})	
+		  	}
+		  }
 	/*	  console.log("FROMID:",req.body.entry[0].changes[0].value.from.id);
 		  console.log("FROMID:",req.body.entry[0].changes[0].value.from.name);
 		  console.log("ITEM:",req.body.entry[0].changes[0].value.item);

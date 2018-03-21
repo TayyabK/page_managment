@@ -23,6 +23,7 @@ exports = module.exports = function (req, res) {
 
 	view.query('Accounts', Account.model.find().where({company: req.user.company}).where({accountType:'facebook'}));
 	view.query('Pages', Page.model.find().where({company: req.user.company}).where({pageType: 'facebook'}));
+	view.query('InstaPages', Page.model.find().where({company: req.user.company}).where({pageType: 'instagram'}));
 
 	var host = req.get('host');
 	if(host == 'localhost:3000'){
@@ -91,7 +92,6 @@ exports = module.exports = function (req, res) {
 				    					    "/me/accounts?access_token="+accessToken,
 				    					    function (response) {
 				    					      if (response && !response.error) {
-				    					        console.log(response.data)
 				    					        response.data.forEach(function(result){
 				    					        	var newPage= new Page.model();
 				    					        	newPage.pagename = result.name;
@@ -109,19 +109,21 @@ exports = module.exports = function (req, res) {
 				    					        			"/"+newPage.pageId+"?fields=instagram_business_account{name}&access_token="+accessToken,
 				    					        			function(response){
 				    					        				if(response && !response.error){
-				    					        					var newPage= new Page.model();
-				    					        					newPage.pagename = response.instagram_business_account.name;
-				    					        					newPage.pageId = response.instagram_business_account.id;
-				    					        					newPage.accessToken = accessToken;
-				    					        					newPage.accountId = newAccount.accountId;
-				    					        					newPage.company = newAccount.company;
-				    					        					newPage.pageType = 'instagram';
-				    					        					newPage.status = 'unsubscribe';
-				    					        					newPage.save(function(err){
-				    					        						if(err){
-				    					        							throw err;
-				    					        						}
-				    					        					});
+				    					        					if(response.instagram_business_account !== undefined){
+					    					        					var newPage= new Page.model();
+					    					        					newPage.pagename = response.instagram_business_account.name;
+					    					        					newPage.pageId = response.instagram_business_account.id;
+					    					        					newPage.accessToken = accessToken;
+					    					        					newPage.accountId = newAccount.accountId;
+					    					        					newPage.company = newAccount.company;
+					    					        					newPage.pageType = 'instagram';
+					    					        					newPage.status = 'unsubscribe';
+					    					        					newPage.save(function(err){
+					    					        						if(err){
+					    					        							throw err;
+					    					        						}
+					    					        					});
+				    					        					}
 				    					        				}
 				    					        				else{
 				    					        					console.log(response.error)				    					        					
@@ -130,13 +132,13 @@ exports = module.exports = function (req, res) {
 				    					        		);
 				    					        	});
 				    					        })
-	    										return done(null,newAccount);  		
 				    					      }
 				    					      else{
 				    					      	console.log(response.error)
 				    					      }
 				    					    }
 				    					);
+	    								return done(null,newAccount);  		
 	    					    	}
 	    					    })
 	    					});
