@@ -67,6 +67,28 @@
 					</div>
 					{{/each}}
 				</div>
+				<div role="tabpanel" class="tab-pane fade in" id="instagram-tab">
+					<div class="title">
+						<div class="titles">
+							<h2>Instagram</h2>
+						</div>
+						<div class="buttons">
+							<a href="/auth/facebook" class="btn btn-success btn-sm">Add account</a>
+						</div>
+					</div>
+					{{#each Accounts}}
+					<h3>Instagram from {{name.full}}'s Account</h3>
+					<div class="accounts" id="{{accountId}}">
+						{{#each ../Pages}}
+						{{#ifeq ../accountId accountId}}
+						<div class="account">
+							<p class="account-title">{{pagename}}</p>
+						</div>
+						{{/ifeq}}
+						{{/each}}
+					</div>
+					{{/each}}
+				</div>
 			</div>
 		</div>
 	</div>

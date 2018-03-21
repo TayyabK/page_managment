@@ -48,13 +48,13 @@ exports = module.exports = function (app) {
 	app.all('/', routes.views.index);
 	app.all('/signup', routes.views.signup);
 	app.get('/signout', routes.views.signout);
-	app.all('/channel', routes.views.channel);
-	app.all('/conversations', routes.views.conversation);
-	app.all('/comments', routes.views.comment);
-	app.get('/page', routes.views.page);
+	app.all('/channel',middleware.requireUser, routes.views.channel);
+	app.all('/conversations',middleware.requireUser, routes.views.conversation);
+	app.all('/comments',middleware.requireUser, routes.views.comment);
+	app.get('/page',middleware.requireUser, routes.views.page);
 	app.get('/policy', routes.views.policy);
-	app.get('/post', routes.views.post);
-	app.get('/subscribe', routes.views.subscribe);
+	app.get('/post',middleware.requireUser, routes.views.post);
+	app.get('/subscribe',middleware.requireUser, routes.views.subscribe);
 
 
 	// API's
@@ -65,22 +65,19 @@ exports = module.exports = function (app) {
 
 	app.get('/auth/facebook',
 		passport.authenticate('facebook', {
-			scope : ['email','manage_pages','publish_pages','read_page_mailboxes']
+			scope : ['email','manage_pages','publish_pages','read_page_mailboxes','instagram_basic','instagram_manage_comments']
 		}
 	));
 
 	app.get('/auth/facebook/callback',
   		passport.authenticate('facebook', {
-  			successRedirect: '/',
-            failureRedirect: '/error' 
+  			successRedirect: '/channel',
+            failureRedirect: '/error'
         })
     );
 
 	app.get('/facebook', function(req, res) {   
-	  if (
-	    req.params('hub.mode') == 'subscribe' &&
-	    req.params('hub.verify_token') == token
-	  ) {
+	  if (req.params('hub.mode') == 'subscribe' && req.params('hub.verify_token') == token ) {
 	    res.send(req.params('hub.challenge'));
 	  } else {
 	    res.sendStatus(400);
@@ -200,10 +197,7 @@ exports = module.exports = function (app) {
 
 
 		app.get('/instagram', function(req, res) {   
-		  if (
-		    req.param('hub.mode') == 'subscribe' &&
-		    req.param('hub.verify_token') == token
-		  ) {
+		  if ( req.param('hub.mode') == 'subscribe' && req.param('hub.verify_token') == token) {
 		    res.send(req.param('hub.challenge'));
 		  } else {
 		    res.sendStatus(400);

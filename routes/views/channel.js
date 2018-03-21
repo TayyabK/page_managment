@@ -105,9 +105,32 @@ exports = module.exports = function (req, res) {
 				    					        		if(err){
 				    					        			throw err;
 				    					        		}
+				    					        		FB.api(
+				    					        			"/"+newPage.pageId+"?fields=instagram_business_account{name}&access_token="+accessToken,
+				    					        			function(response){
+				    					        				if(response && !response.error){
+				    					        					var newPage= new Page.model();
+				    					        					newPage.pagename = response.instagram_business_account.name;
+				    					        					newPage.pageId = response.instagram_business_account.id;
+				    					        					newPage.accessToken = accessToken;
+				    					        					newPage.accountId = newAccount.accountId;
+				    					        					newPage.company = newAccount.company;
+				    					        					newPage.pageType = 'instagram';
+				    					        					newPage.status = 'unsubscribe';
+				    					        					newPage.save(function(err){
+				    					        						if(err){
+				    					        							throw err;
+				    					        						}
+				    					        					});
+				    					        				}
+				    					        				else{
+				    					        					console.log(response.error)				    					        					
+				    					        				}
+				    					        			}
+				    					        		);
 				    					        	});
 				    					        })
-	    										return done(null,newAccount);  					    		
+	    										return done(null,newAccount);  		
 				    					      }
 				    					      else{
 				    					      	console.log(response.error)
