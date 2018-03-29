@@ -1,0 +1,79 @@
+<main id="main">
+	<div class="title">
+		<div class="titles">
+			<h2>Instagram</h2>
+			<p>{{Page.pagename}} - Ticket Detail</p>
+		</div>
+	</div>
+	<div class="content" id="replies">
+	</div>
+	<div class="text">
+		<textarea class="form-control" id="text"></textarea>
+		<button class="btn btn-success" onclick="SendReply();">Send</button>
+	</div>
+</main>
+
+<script>
+
+	window.fbAsyncInit = function() {
+	    FB.init({
+	      appId            : '172494766720528',
+	      autoLogAppEvents : true,
+	      xfbml            : true,
+	      version          : 'v2.12'
+	    });
+
+    	FB.api(
+    	    "/{{Commentid}}/replies?access_token={{Page.accessToken}}&fields=user,text",
+    	    function (response) {
+    	      if (response && !response.error) {
+    	      	console.log(response);
+    	      	response.data.forEach(function(result){
+    	      		if(result.user != undefined){
+	    	      		if(result.user.id == '{{Id}}'){
+		    	      		var reply = '<h4 class="text-right">'+result.text+'</h4>'
+	    	      		}
+    	      		}
+    	      		else{
+    	      			var reply = '<h4>'+result.text+'</h4>'
+    	      		}
+    	      		$('#replies').prepend(reply);
+    	      	})
+    	      }
+    	      else{
+    	      	console.log(response.error)
+    	      }
+    	    }
+    	);
+
+    	SendReply = function() {
+    		FB.api(
+    		    "/{{Commentid}}/replies",
+    		    "POST",
+    		    {
+    		    	"message": $('#text').val(),
+    		    	"access_token":"{{Page.accessToken}}"
+    		    },
+    		    function (response) {
+    		      if (response && !response.error) {
+    		      	console.log(response);
+    		      	$('#text').val('');
+    		      }
+    		      else{
+    		      	console.log(response.error)
+    		      }
+    		    }
+    		);
+    	}
+
+	  };
+
+	(function(d, s, id){
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.id = id;
+		js.src = "https://connect.facebook.net/en_US/sdk.js";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
+
+</script>

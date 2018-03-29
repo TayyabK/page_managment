@@ -53,7 +53,28 @@ exports = module.exports = function (req, res) {
 	    		if(err)
 	    			return done(err);
 	    		if(account){
-	    			return done(null, account);
+	    			FB.api('oauth/access_token', {
+	    			    client_id: FACEBOOK_APP_ID,
+	    			    client_secret: FACEBOOK_CLIENT_SECRET,
+	    			    grant_type: 'fb_exchange_token',
+	    			    fb_exchange_token: accessToken
+	    			}, function (res) {
+	    			    if(!res || res.error) {
+	    			        console.log(!res ? 'error occurred' : res.error);
+	    			        return;
+	    			    }
+	    			    var accessToken = res.access_token;
+	    			    var expires = res.expires ? res.expires : 0;
+	    			    account.accessToken = accessToken;
+	    			    account.save(function(err){
+	    			    	if(err){
+	    			    		throw err;
+	    			    	}
+	    			    	else{
+	    						return done(null, account);
+	    			    	}
+	    			    })
+	    			})
 	    		}
 	    		else {
 	    			var newAccount= new Account.model();

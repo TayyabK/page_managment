@@ -13,7 +13,8 @@ Ticket.add({
 		field: { type: String },
 		status: { type: String, default: 'New'},
 		startTime: { type: Date, default: moment().subtract(20, 'seconds')},
-		endTime: { type: Date}
+		endTime: { type: Date},
+		linkedAccount: { type: String}
 	},'Comments',{
 		fromId: { type: String },
 		fromName: { type: String },

@@ -62,6 +62,8 @@ exports = module.exports = function (app) {
 	app.all('/comments',middleware.requireUser, routes.views.comment);
 	app.all('/instagramfeed',middleware.requireUser, routes.views.instagram.feed);
 	app.all('/instagram/post',middleware.requireUser, routes.views.instagram.post);
+	app.all('/instagram/ticket',middleware.requireUser, routes.views.instagram.ticket);
+	app.all('/instagram/ticket/detail',middleware.requireUser, routes.views.instagram.details);
 	app.get('/page',middleware.requireUser, routes.views.page);
 	app.get('/policy', routes.views.policy);
 	app.get('/post',middleware.requireUser, routes.views.post);

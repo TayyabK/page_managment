@@ -15,5 +15,29 @@ exports = module.exports = function (req, res) {
 	
 	view.query('Page', Page.model.findOne({pageId: req.query.Id}));
 
+	view.on('post', { action: 'makeTicket' }, function(next){
+		var Data = {
+			comment: req.body.comment,
+			comId: req.body.comId,
+			mediaId: req.body.mediaId,
+			fromId: req.body.fromId,
+			fromName: req.body.fromName,
+			linkedAccount: 'instagram',
+			entryId: req.query.Id
+		}
+
+		var Ticket = keystone.list('Ticket').model,
+			newTicket = new Ticket(Data);
+
+			newTicket.save(function(err){
+				if(err){
+					throw err;
+				}
+				else{
+					next();
+				}
+			})
+	})
+
 	view.render('instagram/post');
 };

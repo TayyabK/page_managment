@@ -12,7 +12,10 @@ exports = module.exports = function (req, res) {
 	locals.section = 'Instagram-Feed';
 
 	locals.Id = req.query.Id;
+	
 	view.query('Page', Page.model.findOne({pageId: req.query.Id}));
-	view.query('Ticket', Ticket.model.find({entryId: req.query.Id}).where('status', 'New').count());
-	view.render('instagram/feed');
+	view.query('Ticketcount', Ticket.model.find({entryId: req.query.Id}).where('status', 'New').count());
+	view.query('Ticket', Ticket.model.find({entryId: req.query.Id}).where('status', 'New'));
+	
+	view.render('instagram/ticket');
 };
