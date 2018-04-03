@@ -27,13 +27,13 @@ keystone.pre('render', middleware.flashMessages);
 
 
 passport.serializeUser(function(user, done) {
-  done(null, user._id);
+  done(null, user);
 });
 
 
 passport.deserializeUser(function(userId, done) {
-  User.model.findOne({_id: userId} ,function(err, user){
-    done(err, user);
+  	User.model.findOne({_id: userId} ,function(err, user){
+	    done(err, user);
   });
 });
 
@@ -64,6 +64,7 @@ exports = module.exports = function (app) {
 	app.all('/instagram/post',middleware.requireUser, routes.views.instagram.post);
 	app.all('/instagram/ticket',middleware.requireUser, routes.views.instagram.ticket);
 	app.all('/instagram/ticket/detail',middleware.requireUser, routes.views.instagram.details);
+	app.all('/twitter/feed',middleware.requireUser, routes.views.twitter.feed);
 	app.get('/page',middleware.requireUser, routes.views.page);
 	app.get('/policy', routes.views.policy);
 	app.get('/post',middleware.requireUser, routes.views.post);
@@ -74,6 +75,22 @@ exports = module.exports = function (app) {
 
 	app.post('/api/channel/subscribe', routes.api.channel.subscribe);
 	app.post('/api/channel/unsubscribe', routes.api.channel.unsubscribe);
+	app.post('/api/twitter/postTweet', routes.api.twitter.postTweet);
+	app.get('/api/twitter/getTweets', routes.api.twitter.getTweets);
+	app.get('/api/twitter/getMessages', routes.api.twitter.getMessages);
+
+
+
+	// Authetication using social platforms
+
+	app.get('/auth/twitter', passport.authenticate('twitter'));
+
+	app.get('/twitter/callback',
+  		passport.authenticate('twitter', {
+  			successRedirect: '/channel',
+            failureRedirect: '/error'
+        })
+    );
 
 
 	app.get('/auth/facebook',

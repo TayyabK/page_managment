@@ -12,19 +12,31 @@
 				<li role="presentation" class="active">
 					<a href="#facebook-tab" role="tab" data-toggle="tab">
 						<i class="fa fa-facebook-square"></i>
-						<h3>Facebook <span>2 accounts</span></h3>
+						<h3>Facebook <span>{{Facebookcount}} accounts</span></h3>
 					</a>
 				</li>
 				<li role="presentation" class="">
 					<a href="#twitter-tab" role="tab" data-toggle="tab">
 						<i class="fa fa-twitter-square"></i>
-						<h3>Twitter <span>5 accounts</span></h3>
+						<h3>Twitter <span>{{Twittercount}} accounts</span></h3>
 					</a>
 				</li>
 				<li role="presentation" class="">
 					<a href="#instagram-tab" role="tab" data-toggle="tab">
 						<i class="fa fa-instagram"></i>
-						<h3>Instagram <span>1 account</span></h3>
+						<h3>Instagram <span>{{InstaPagescount}} account</span></h3>
+					</a>
+				</li>
+				<li role="presentation" class="">
+					<a href="#snapchat-tab" role="tab" data-toggle="tab">
+						<i class="fa fa-snapchat"></i>
+						<h3>Snapchat <span>{{InstaPagescount}} account</span></h3>
+					</a>
+				</li>
+				<li role="presentation" class="">
+					<a href="#linkedin-tab" role="tab" data-toggle="tab">
+						<i class="fa fa-linkedin"></i>
+						<h3>LinkedIn <span>{{InstaPagescount}} account</span></h3>
 					</a>
 				</li>
 				<li role="presentation" class="">
@@ -67,6 +79,24 @@
 					</div>
 					{{/each}}
 				</div>
+				<div role="tabpanel" class="tab-pane fade in" id="twitter-tab">
+					<div class="title">
+						<div class="titles">
+							<h2>Twitter</h2>
+						</div>
+						<div class="buttons">
+							<a href="/auth/twitter" class="btn btn-success btn-sm">Add account</a>
+						</div>
+					</div>
+					{{#each Twitter}}
+					<h3>Accounts</h3>
+					<div class="accounts" id="{{accountId}}">
+						<div class="account">
+							<a href="/twitter/feed?id={{accountId}}"><p class="account-title">{{name.first}}</p></a>
+						</div>
+					</div>
+					{{/each}}
+				</div>
 				<div role="tabpanel" class="tab-pane fade in" id="instagram-tab">
 					<div class="title">
 						<div class="titles">
@@ -83,19 +113,31 @@
 						{{#ifeq ../accountId accountId}}
 						<div class="account">
 							<a href="/instagramfeed?Id={{pageId}}"><p class="account-title">{{pagename}}</p></a>
-<!-- 							<div class="account-brand">
-	{{#ifeq status 'subscribe'}}
-	<button class="btn btn-success" id="unsubscribe-{{pageId}}" onclick="unsubscribePage('{{pageId}}','{{accessToken}}')">Unsubscribe</button>
-	{{/ifeq}}
-	{{#ifeq status 'unsubscribe'}}
-	<button class="btn btn-success" id="subscribe-{{pageId}}" onclick="subscribePage('{{pageId}}','{{accessToken}}')">Subscribe</button>
-	{{/ifeq}}
-</div> -->
 						</div>
 						{{/ifeq}}
 						{{/each}}
 					</div>
 					{{/each}}
+				</div>
+				<div role="tabpanel" class="tab-pane fade in" id="snapchat-tab">
+					<div class="title">
+						<div class="titles">
+							<h2>Snapchat</h2>
+						</div>
+						<div class="buttons">
+							<a href="/auth/twitter" class="btn btn-success btn-sm">Add account</a>
+						</div>
+					</div>
+				</div>
+				<div role="tabpanel" class="tab-pane fade in" id="linkedin-tab">
+					<div class="title">
+						<div class="titles">
+							<h2>LinkedIn</h2>
+						</div>
+						<div class="buttons">
+							<a href="/auth/twitter" class="btn btn-success btn-sm">Add account</a>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -13,6 +13,7 @@ Account.add({
 	accountType: { type: String },
 	accountId: { type: String },
 	accessToken: { type: String},
+	tokenSecret: { type: String },
 	company: { type: String}
 });
 

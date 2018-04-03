@@ -3,6 +3,7 @@ var keystone = require('keystone'),
 	Account = keystone.list('Account'),
 	Page = keystone.list('Page'),
 	FacebookStrategy = require('passport-facebook').Strategy,
+	TwitterStrategy = require('passport-twitter').Strategy,
 	FB = require('fb');
 
 	FB.options({
@@ -22,8 +23,12 @@ exports = module.exports = function (req, res) {
 	locals.section = 'channel';
 
 	view.query('Accounts', Account.model.find().where({company: req.user.company}).where({accountType:'facebook'}));
+	view.query('Facebookcount', Account.model.find().where({company: req.user.company}).where({accountType:'facebook'}).count());
+	view.query('Twitter', Account.model.find().where({company: req.user.company}).where({accountType:'twitter'}));
+	view.query('Twittercount', Account.model.find().where({company: req.user.company}).where({accountType:'twitter'}).count());
 	view.query('Pages', Page.model.find().where({company: req.user.company}).where({pageType: 'facebook'}));
 	view.query('InstaPages', Page.model.find().where({company: req.user.company}).where({pageType: 'instagram'}));
+	view.query('InstaPagescount', Page.model.find().where({company: req.user.company}).where({pageType: 'instagram'}).count());
 
 	var host = req.get('host');
 	if(host == 'localhost:3000'){
@@ -34,12 +39,63 @@ exports = module.exports = function (req, res) {
 	}
 
 
+
+	var TWITTER_APP_ID = "Zcq93EVMlbNjOm0uT9HGNTvKQ";
+	var TWITTER_CLIENT_SECRET = "eunEbSx0QcRFnLUD0xtNJPuGvfXE5M5wgSKRJQdLgoRIONDti1";
+
+	var TWITTERcallback = callbackUrlHost+"/twitter/callback";
+
+	passport.use(new TwitterStrategy({
+	    consumerKey: TWITTER_APP_ID,
+	    consumerSecret: TWITTER_CLIENT_SECRET,
+	    callbackURL: TWITTERcallback
+	  },
+	  function(token, tokenSecret, profile, done) {
+
+	  	console.log(profile)
+    	Account.model.findOne({'accountId': profile.id }, function(err,account){
+    		if(err)
+    			return done(err);
+    		if(account){
+    			account.accessToken = token;
+    			account.tokenSecret = tokenSecret;
+    			account.save(function(err){
+    				if(err){
+    					throw err;
+    				}
+    				else{
+    					return done(null, account);
+    				}
+    			})
+    		}
+    		else {
+    			var newAccount= new Account.model();
+    			newAccount.accountId = profile.id;
+    			newAccount.accessToken = token;
+    			newAccount.tokenSecret = tokenSecret;
+    			newAccount.name.first = profile.username;
+    			newAccount.accountType = 'twitter';
+    			newAccount.company = req.user.company;
+    			newAccount.save(function(err){
+    				if(err)
+    				{
+    					throw err;
+    				}
+    				else{
+    					return done(null,newAccount);
+    				}
+    			});	    			
+    		}
+    	})
+/*	  	return done(null,profile)
+*/	  })
+	)
+
+
 	var FACEBOOK_APP_ID = "172494766720528";
 	var FACEBOOK_CLIENT_SECRET = "0907269263cfba523062e9849288dc53";
 
 	var FACEBOOKcallback = callbackUrlHost+"/auth/facebook/callback";
-
-
 
 	passport.use(new FacebookStrategy({
 	    clientID: FACEBOOK_APP_ID,

@@ -1,0 +1,60 @@
+<main id="main">
+	<div class="title">
+		<div class="titles">
+			<h2>Twitter</h2>
+			<p>Manage Accounts for receiving tickets.</p>
+		</div>
+	</div>
+	<div class="content">
+		<a class="btn btn-success pull-right">Direct Messages</a>
+		<br>
+		<h3>Post A Tweet!</h3>
+		<textarea class="form-control" id="text"></textarea>
+		<br>
+		<button class="btn btn-success" id="tweet_btn" onclick="postTweet()">Tweet</button>
+	</div>
+	<div id="tweets">
+		
+	</div>
+</main>
+
+<script>
+
+
+	$.ajax({
+		type: 'GET',
+		url: '/api/twitter/getTweets?accountId={{Id}}',
+		success: function(data){
+			console.log(data);
+			data.tweets.forEach(function(tweet){
+
+				var tweet = '<div class="media" style="padding:10px"><div class="media-left"><img class="media-object" src="'+tweet.user.profile_image_url+'"></div><div class="media-body"><h4 class="media-heading">'+tweet.text+'</h4></div></div>';
+				$('#tweets').append(tweet);
+			})
+		}
+	})
+	
+	$.ajax({
+		type: 'GET',
+		url: '/api/twitter/getMessages?accountId={{Id}}',
+		success: function(data){
+			console.log(data);
+		}
+	})
+
+
+	postTweet = function(){
+		var tweet_text = $('#text').val();
+		$('#tweet_btn').attr('disabled', true);
+		$.ajax({
+			type: 'POST',
+			data: {"accountId": '{{Id}}',"status": tweet_text},
+			url: '/api/twitter/postTweet',
+			success: function(data){
+				console.log(data);
+				$('#tweet_btn').attr('disabled', false);
+				$('#text').val('');
+			}
+		})
+	}
+</script>
