@@ -1,7 +1,6 @@
 var keystone = require('keystone'),
-	Page = keystone.list('Page'),
+	Account = keystone.list('Account'),
 	Ticket = keystone.list('Ticket');
-var Twit = require('Twit');
 
 exports = module.exports = function (req, res) {
 
@@ -11,8 +10,10 @@ exports = module.exports = function (req, res) {
 	// locals.section is used to set the currently selected
 	// item in the header navigation.
 	locals.section = 'Twitter-Feed';
+	 
+	locals.Id = req.query.Id;
 
-	locals.Id = req.query.id;
+	view.query('Account', Account.model.findOne({accountId: req.query.Id}));
 
-	view.render('twitter/feed');
+	view.render('linkedin/feed');
 };

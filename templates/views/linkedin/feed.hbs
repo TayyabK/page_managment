@@ -1,0 +1,26 @@
+<main id="main">
+	<div class="title">
+		<h2>LinkedIn</h2>
+		<p>Manage LinkedIn</p>
+	</div>
+	<div class="content">
+		{{Account}}
+	</div>
+</main>
+
+
+<script type="text/javascript">
+	
+	$.ajax({
+		type: 'GET',
+		url: 'https://api.linkedin.com/v1/people/~?format=json',
+		headers: {
+			"x-li-format": "json"
+		},
+		success: function(data){
+			console.log(data);
+		}
+	})
+
+
+</script>
