@@ -92,6 +92,14 @@ exports = module.exports = function (app) {
         })
     );
 
+	app.get('/auth/linkedin', passport.authenticate('linkedin'));
+
+	app.get('/auth/linkedin/callback',
+  		passport.authenticate('linkedin', {
+  			successRedirect: '/channel',
+            failureRedirect: '/error'
+        })
+    );
 
 	app.get('/auth/facebook',
 		passport.authenticate('facebook', {

@@ -4,6 +4,7 @@ var keystone = require('keystone'),
 	Page = keystone.list('Page'),
 	FacebookStrategy = require('passport-facebook').Strategy,
 	TwitterStrategy = require('passport-twitter').Strategy,
+	LinkedInStrategy = require('passport-linkedin').Strategy,
 	FB = require('fb');
 
 	FB.options({
@@ -29,6 +30,8 @@ exports = module.exports = function (req, res) {
 	view.query('Pages', Page.model.find().where({company: req.user.company}).where({pageType: 'facebook'}));
 	view.query('InstaPages', Page.model.find().where({company: req.user.company}).where({pageType: 'instagram'}));
 	view.query('InstaPagescount', Page.model.find().where({company: req.user.company}).where({pageType: 'instagram'}).count());
+	view.query('LinkedIn', Account.model.find().where({company: req.user.company}).where({accountType:'linkedin'}));
+	view.query('LinkedIncount', Account.model.find().where({company: req.user.company}).where({accountType:'linkedin'}).count());
 
 	var host = req.get('host');
 	if(host == 'localhost:3000'){
@@ -226,6 +229,51 @@ exports = module.exports = function (req, res) {
 	    })
 	  }
 	));
+
+
+	passport.use(new LinkedInStrategy({
+	    consumerKey: process.env.LINKEDIN_APP_KEY,
+	    consumerSecret: process.env.LINKEDIN_APP_SECRET,
+	    callbackURL: callbackUrlHost+"/auth/linkedin/callback"
+	  },
+	  function(token, tokenSecret, profile, done) {
+	  	Account.model.findOne({'accountId': profile.id }, function(err,account){
+	  		if(err)
+	  			return done(err);
+	  		if(account){
+	  			account.accessToken = token;
+	  			account.tokenSecret = tokenSecret;
+	  			account.save(function(err){
+	  				if(err){
+	  					throw err;
+	  				}
+	  				else{
+	  					return done(null, account);
+	  				}
+	  			})
+	  		}
+	  		else {
+	  			var newAccount= new Account.model();
+	  			newAccount.accountId = profile.id;
+	  			newAccount.accessToken = token;
+	  			newAccount.tokenSecret = tokenSecret;
+	  			newAccount.name.first = profile.name.givenName;
+	  			newAccount.name.last = profile.name.familyName;
+	  			newAccount.accountType = 'linkedin';
+	  			newAccount.company = req.user.company;
+	  			newAccount.save(function(err){
+	  				if(err)
+	  				{
+	  					throw err;
+	  				}
+	  				else{
+	  					return done(null,newAccount);
+	  				}
+	  			});	    			
+	  		}
+	  	})
+	  }
+	))
 
 	view.render('channel');
 };

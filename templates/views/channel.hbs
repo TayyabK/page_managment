@@ -36,7 +36,7 @@
 				<li role="presentation" class="">
 					<a href="#linkedin-tab" role="tab" data-toggle="tab">
 						<i class="fa fa-linkedin"></i>
-						<h3>LinkedIn <span>{{InstaPagescount}} account</span></h3>
+						<h3>LinkedIn <span>{{LinkedIncount}} account</span></h3>
 					</a>
 				</li>
 				<li role="presentation" class="">
@@ -135,9 +135,17 @@
 							<h2>LinkedIn</h2>
 						</div>
 						<div class="buttons">
-							<a href="/auth/twitter" class="btn btn-success btn-sm">Add account</a>
+							<a href="/auth/linkedin" class="btn btn-success btn-sm">Add account</a>
 						</div>
 					</div>
+					{{#each LinkedIn}}
+					<h3>Accounts</h3>
+					<div class="accounts" id="{{accountId}}">
+						<div class="account">
+							<a href="#"><p class="account-title">{{name.full}}</p></a>
+						</div>
+					</div>
+					{{/each}}
 				</div>
 			</div>
 		</div>
