@@ -1,7 +1,7 @@
 var keystone = require('keystone'),
 	Page = keystone.list('Page'),
 	Ticket = keystone.list('Ticket');
-var Twit = require('Twit');
+var Twit = require('twit');
 
 exports = module.exports = function (req, res) {
 
