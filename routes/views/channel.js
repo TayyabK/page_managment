@@ -4,7 +4,7 @@ var keystone = require('keystone'),
 	Page = keystone.list('Page'),
 	FacebookStrategy = require('passport-facebook').Strategy,
 	TwitterStrategy = require('passport-twitter').Strategy,
-	LinkedInStrategy = require('passport-linkedin').Strategy,
+	LinkedInStrategy = require('passport-linkedin-oauth2').Strategy,
 	FB = require('fb');
 
 	FB.options({
@@ -230,13 +230,60 @@ exports = module.exports = function (req, res) {
 	  }
 	));
 
+	passport.use(new LinkedInStrategy({
+	  clientID: process.env.LINKEDIN_APP_KEY,
+	  clientSecret: process.env.LINKEDIN_APP_SECRET,
+	  callbackURL: callbackUrlHost+"/auth/linkedin/callback",
+	  state: true
+	}, function(accessToken, refreshToken, profile, done) {
+	  // asynchronous verification, for effect...
+	  process.nextTick(function () {
+	  	Account.model.findOne({'accountId': profile.id }, function(err,account){
+	  		if(err)
+	  			return done(err);
+	  		if(account){
+	  			account.accessToken = accessToken;
+	  			account.tokenSecret = refreshToken;
+	  			account.save(function(err){
+	  				if(err){
+	  					throw err;
+	  				}
+	  				else{
+	  					return done(null, account);
+	  				}
+	  			})
+	  		}
+	  		else {
+	  			var newAccount= new Account.model();
+	  			newAccount.accountId = profile.id;
+	  			newAccount.accessToken = accessToken;
+	  			newAccount.tokenSecret = refreshToken;
+	  			newAccount.name.first = profile.name.givenName;
+	  			newAccount.name.last = profile.name.familyName;
+	  			newAccount.accountType = 'linkedin';
+	  			newAccount.company = req.user.company;
+	  			newAccount.save(function(err){
+	  				if(err)
+	  				{
+	  					throw err;
+	  				}
+	  				else{
+	  					return done(null,newAccount);
+	  				}
+	  			});	    			
+	  		}
+	  	})
+	  });
+	}));
 
+/*
 	passport.use(new LinkedInStrategy({
 	    consumerKey: process.env.LINKEDIN_APP_KEY,
 	    consumerSecret: process.env.LINKEDIN_APP_SECRET,
 	    callbackURL: callbackUrlHost+"/auth/linkedin/callback"
 	  },
 	  function(token, tokenSecret, profile, done) {
+	  	console.log(token);
 	  	Account.model.findOne({'accountId': profile.id }, function(err,account){
 	  		if(err)
 	  			return done(err);
@@ -274,6 +321,6 @@ exports = module.exports = function (req, res) {
 	  	})
 	  }
 	))
-
+*/
 	view.render('channel');
 };
