@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
+    "ajax-request": "^1.2.3",
     "async": "2.1.4",
+    "axios": "^0.18.0",
     "cloudinary": "1.7.0",
     "dotenv": "4.0.0",
     "express-handlebars": "3.0.0",

@@ -4,23 +4,22 @@
 		<p>Manage LinkedIn</p>
 	</div>
 	<div class="content">
-		{{Account}}
+		<div id="user-info">
+			
+		</div>
 	</div>
 </main>
 
-
 <script type="text/javascript">
-	
-	$.ajax({
-		type: 'GET',
-		url: 'https://api.linkedin.com/v1/people/~?oauth2_access_token={{Account.accessToken}}&format=json',
-		headers: {
-			"x-li-format": "json"
-		},
-		success: function(data){
-			console.log(data);
-		}
-	})
 
+$.ajax({
+	type: 'GET',
+	url: '/api/linkedin/testapi?accountId={{Account.accountId}}',
+	success: function(data){
+		console.log(data);
+		var userinfo = '<h3>'+data.data.firstName+' '+data.data.lastName+'</h3><p>'+data.data.headline+'</p>';
+		$('#user-info').append(userinfo);
+	}
+})
 
 </script>

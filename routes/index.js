@@ -79,6 +79,7 @@ exports = module.exports = function (app) {
 	app.post('/api/twitter/postTweet', routes.api.twitter.postTweet);
 	app.get('/api/twitter/getTweets', routes.api.twitter.getTweets);
 	app.get('/api/twitter/getMessages', routes.api.twitter.getMessages);
+	app.get('/api/linkedin/testapi', routes.api.linkedin.testapi);
 
 
 
