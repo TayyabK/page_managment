@@ -234,6 +234,7 @@ exports = module.exports = function (req, res) {
 	  clientID: process.env.LINKEDIN_APP_KEY,
 	  clientSecret: process.env.LINKEDIN_APP_SECRET,
 	  callbackURL: callbackUrlHost+"/auth/linkedin/callback",
+	  scope: ['r_emailaddress', 'r_basicprofile','rw_company_admin','w_share'],
 	  state: true
 	}, function(accessToken, refreshToken, profile, done) {
 	  // asynchronous verification, for effect...
